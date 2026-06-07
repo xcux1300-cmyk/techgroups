@@ -136,12 +136,14 @@
 </head>
 <body>
 
+    <!-- TELA DE CARREGAMENTO SEGURO -->
     <div id="loading-screen" style="display: none;">
         <div class="cyber-loader"></div>
         <div class="loading-text">ESTABELECENDO PROTOCOLO DE SEGURANÇA...</div>
     </div>
 
     <div class="container" id="main-container">
+        <!-- HEADER COM LOGO DA STRATTON ATIVA -->
         <div class="header">
             <div class="stratton-logo">
                 <div class="circle-laurel">
@@ -152,10 +154,12 @@
             <a href="enviar.html" class="btn-enviar">+ DIVULGAR</a>
         </div>
 
+        <!-- VITRINE DE ANÚNCIOS -->
         <div class="banner-anuncio">
             SISTEMA DE TRÁFEGO PRIVADO. ANUNCIE: <span>t.me/seu_suporte</span>
         </div>
 
+        <!-- FILTROS EM LINHA RETA HORIZONTAL DESLIZÁVEL -->
         <div class="categorias-container">
             <div class="categorias-nav">
                 <button class="cat-btn active" onclick="filtrar('Todos')">⚡ Todos os Grupos <span class="count-badge" id="count-Todos">0</span></button>
@@ -177,6 +181,7 @@
         const SUPABASE_URL = "https://fufgsmmejwvibqkglkbv.supabase.co";
         const SUPABASE_KEY = "sb_publishable_KUq3cj4qjnjXdv2FEDQ5Xw_z9to0B5P";
         let todosOsGrupos = [];
+        let categoriaAtual = 'Todos';
 
         // SISTEMA DE MEMÓRIA DA SESSÃO
         const screen = document.getElementById('loading-screen');
@@ -220,7 +225,7 @@
                 todosOsGrupos = await response.json();
                 
                 calcularContadores();
-                renderizar(todosOsGrupos);
+                filtrar(categoriaAtual);
             } catch (error) {
                 document.getElementById('status').innerText = "Erro na conexão.";
             }
@@ -247,7 +252,7 @@
             }
             statusNode.style.display = 'none';
 
-            // Carrega os IDs dos grupos que o usuário já curtiu do localStorage
+            // Carrega a memória de quais grupos já foram curtidos por este navegador
             const curtidos = JSON.parse(localStorage.getItem('grupos_curtidos')) || [];
 
             lista.forEach(grupo => {
@@ -256,9 +261,11 @@
                 const eVerificado = grupo.descricao && grupo.descricao.includes("[VIP]") ? '<span class="selo-verificado">⚡ VIP</span>' : '';
                 const descricaoLimpa = grupo.descricao ? grupo.descricao.replace("[VIP]", "") : 'Link ativo para transferência.';
                 
-                // Verifica se este grupo específico está curtido
                 const jaCurtiu = curtidos.includes(grupo.id);
                 const classeLiked = jaCurtiu ? 'liked' : '';
+                
+                // Puxa o valor real vindo direto da coluna do Supabase
+                const contagemLikes = grupo.likes || 0;
 
                 const card = document.createElement('div');
                 card.className = 'card';
@@ -273,7 +280,7 @@
                         <div class="card-footer">
                             <div class="like-zone ${classeLiked}" id="like-zone-${grupo.id}">
                                 <button class="btn-like" onclick="gerenciarLike(event, ${grupo.id})">🔥</button>
-                                <span class="like-count" id="like-count-${grupo.id}">${grupo.likes || 0}</span>
+                                <span class="like-count" id="like-count-${grupo.id}">${contagemLikes}</span>
                             </div>
                             ${eVerificado}
                             <button class="btn-entrar" onclick="registrarClique(${grupo.id}, '${grupo.link}', ${grupo.cliques || 0})">ACESSAR</button>
@@ -285,10 +292,14 @@
         }
 
         function filtrar(categoria) {
-            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-            if(event && event.currentTarget) {
-                event.currentTarget.classList.add('active');
-            }
+            categoriaAtual = categoria;
+            document.querySelectorAll('.cat-btn').forEach(b => {
+                b.classList.remove('active');
+                if(b.getAttribute('data-cat') === categoria || (categoria === 'Todos' && b.innerText.includes('Todos'))) {
+                    b.classList.add('active');
+                }
+            });
+
             if (categoria === 'Todos') {
                 renderizar(todosOsGrupos);
             } else {
@@ -297,39 +308,44 @@
             }
         }
 
-        // NOVA FUNÇÃO DO BOTÃO DE CURTIR (LIGA / DESLIGA)
+        // GERENCIADOR DE LIKE SEGURO (Sincronizado Local e Nuvem)
         async function gerenciarLike(event, id) {
             if(event) event.stopPropagation();
             
             let curtidos = JSON.parse(localStorage.getItem('grupos_curtidos')) || [];
             const index = curtidos.indexOf(id);
             
-            const elementoContador = document.getElementById(`like-count-${id}`);
-            const elementoZona = document.getElementById(`like-zone-${id}`);
-            let likesAtuais = parseInt(elementoContador.innerText) || 0;
+            // Procura o objeto do grupo na nossa lista principal global
+            const grupoLocal = todosOsGrupos.find(g => g.id === id);
+            if (!grupoLocal) return;
+
+            let likesAtuais = grupoLocal.likes || 0;
             let novoLike;
 
             if (index === -1) {
-                // Caso não tenha curtido ainda: Adiciona curtida (+1)
+                // Adiciona curtida se não curtiu ainda
                 novoLike = likesAtuais + 1;
                 curtidos.push(id);
-                if(elementoZona) elementoZona.classList.add('liked');
             } else {
-                // Caso já tenha curtido antes: Retira curtida (-1)
-                novoLike = Math.max(0, likesAtuais - 1); // Evita curtidas negativas por segurança
+                // Retira curtida se clicou de novo
+                novoLike = Math.max(0, likesAtuais - 1);
                 curtidos.splice(index, 1);
-                if(elementoZona) elementoZona.classList.remove('liked');
             }
 
-            // Atualiza na tela imediatamente
-            if(elementoContador) elementoContador.innerText = novoLike;
+            // Atualiza os dados na memória RAM global imediatamente
+            grupoLocal.likes = novoLike;
             localStorage.setItem('grupos_curtidos', JSON.stringify(curtidos));
             
-            // Sincroniza também no objeto local para não quebrar a filtragem temporária
-            const grupoLocal = todosOsGrupos.find(g => g.id === id);
-            if(grupoLocal) grupoLocal.likes = novoLike;
+            // Atualiza o visual das zonas na tela na hora
+            const elementoContador = document.getElementById(`like-count-${id}`);
+            const elementoZona = document.getElementById(`like-zone-${id}`);
+            if(elementoContador) elementoContador.innerText = novoLike;
+            if(elementoZona) {
+                if (index === -1) elementoZona.classList.add('liked');
+                else elementoZona.classList.remove('liked');
+            }
 
-            // Salva a alteração direto na tabela do Supabase
+            // Envia e fixa permanentemente a alteração dentro do Supabase
             await fetch(SUPABASE_URL + "/rest/v1/lista_grupos?id=eq." + id, {
                 method: 'PATCH',
                 headers: {
@@ -344,6 +360,9 @@
         async function registrarClique(id, linkOriginal, cliquesAtuais) {
             const novosCliques = cliquesAtuais + 1;
             window.open(linkOriginal, '_blank');
+
+            const grupoLocal = todosOsGrupos.find(g => g.id === id);
+            if(grupoLocal) grupoLocal.cliques = novosCliques;
 
             await fetch(SUPABASE_URL + "/rest/v1/lista_grupos?id=eq." + id, {
                 method: 'PATCH',
