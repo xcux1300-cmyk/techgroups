@@ -80,7 +80,7 @@
         .categorias-nav { display: inline-flex; gap: 8px; }
         
         .cat-btn {
-        display: inline-flex;
+            display: inline-flex;
             align-items: center;
             gap: 6px;
             background: var(--bg-card); border: 1px solid var(--borda); color: var(--texto-h); 
@@ -125,6 +125,7 @@
         .like-count { color: white; font-weight: 700; font-size: 12px; }
 
         .loading { text-align: center; color: var(--texto-p); padding: 40px; font-size: 13px; font-weight: 600; }
+
         /* ANIMAÇÕES */
         @keyframes spin { to { transform: rotate(360deg); } }
         @keyframes rotateSlow { to { transform: rotate(360deg); } }
@@ -134,14 +135,12 @@
 </head>
 <body>
 
-    <!-- TELA DE CARREGAMENTO SEGURO (EM PORTUGUÊS) -->
     <div id="loading-screen">
         <div class="cyber-loader"></div>
         <div class="loading-text">ESTABELECENDO PROTOCOLO DE SEGURANÇA...</div>
     </div>
 
     <div class="container">
-        <!-- HEADER COM LOGO DA STRATTON ATIVA -->
         <div class="header">
             <div class="stratton-logo">
                 <div class="circle-laurel">
@@ -152,12 +151,10 @@
             <a href="enviar.html" class="btn-enviar">+ DIVULGAR</a>
         </div>
 
-        <!-- VITRINE DE ANÚNCIOS -->
         <div class="banner-anuncio">
             SISTEMA DE TRÁFEGO PRIVADO. ANUNCIE: <span>t.me/seu_suporte</span>
         </div>
 
-        <!-- FILTROS EM LINHA RETA HORIZONTAL DESLIZÁVEL -->
         <div class="categorias-container">
             <div class="categorias-nav">
                 <button class="cat-btn active" onclick="filtrar('Todos')">⚡ Todos os Grupos <span class="count-badge" id="count-Todos">0</span></button>
@@ -198,6 +195,7 @@
                 if(screen) screen.style.display = 'none';
             }, 1500);
         });
+
         // Fallback extra de segurança caso o evento de load demore muito
         setTimeout(() => {
             const screen = document.getElementById('loading-screen');
@@ -234,7 +232,7 @@
             const statusNode = document.getElementById('status');
             container.innerHTML = '';
             
-            if (lista.length === 0) {
+            if (!lista || lista.length === 0) {
                 statusNode.innerText = "Nenhum canal ativo nesta categoria.";
                 statusNode.style.display = 'block';
                 return;
@@ -249,7 +247,7 @@
 
                 const card = document.createElement('div');
                 card.className = 'card';
-                card.innerHTML = 
+                card.innerHTML = `
                     <div class="card-banner" style="background-image: url('${urlBanner}')"></div>
                     <div class="card-corpo">
                         <div class="card-header">
@@ -259,21 +257,23 @@
                         <p>${descricaoLimpa}</p>
                         <div class="card-footer">
                             <div class="like-zone">
-                                <button class="btn-like" onclick="darLike(${grupo.id}, ${grupo.likes || 0})">🔥</button>
+                                <button class="btn-like" onclick="darLike(event, ${grupo.id}, ${grupo.likes || 0})">🔥</button>
                                 <span class="like-count" id="like-count-${grupo.id}">${grupo.likes || 0}</span>
                             </div>
                             ${eVerificado}
                             <button class="btn-entrar" onclick="registrarClique(${grupo.id}, '${grupo.link}', ${grupo.cliques || 0})">ACESSAR</button>
                         </div>
                     </div>
-                ;
+                `;
                 container.appendChild(card);
             });
         }
 
         function filtrar(categoria) {
             document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-            if(event.currentTarget) event.currentTarget.classList.add('active');
+            if(event && event.currentTarget) {
+                event.currentTarget.classList.add('active');
+            }
             if (categoria === 'Todos') {
                 renderizar(todosOsGrupos);
             } else {
@@ -281,10 +281,12 @@
                 renderizar(filtrados);
             }
         }
-            async function darLike(id, likesAtuais) {
-            event.stopPropagation();
+
+        async function darLike(event, id, likesAtuais) {
+            if(event) event.stopPropagation();
             const novoLike = likesAtuais + 1;
-            document.getElementById(like-count-${id}).innerText = novoLike;
+            const elemento = document.getElementById(`like-count-${id}`);
+            if(elemento) elemento.innerText = novoLike;
             
             await fetch(SUPABASE_URL + "/rest/v1/lista_grupos?id=eq." + id, {
                 method: 'PATCH',
