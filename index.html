@@ -20,7 +20,6 @@
         .container { max-width: 500px; margin: 0 auto; padding: 0 15px; opacity: 1; }
         body.com-loading .container { opacity: 0; animation: fadeInSite 0.5s 0.3s forwards; }
 
-        /* TELA DE CARREGAMENTO AJUSTADA */
         #loading-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #04060a; z-index: 9999; display: flex; flex-direction: column;
@@ -93,7 +92,6 @@
         .card-corpo { padding: 16px; position: relative; margin-top: -20px; z-index: 2; }
         .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 10px; }
         
-        /* Proteção contra quebra de layout em títulos gigantes */
         .card h3 { font-size: 18px; font-weight: 800; color: #fff; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
         
         .selo-verificado { color: var(--verde-neon); font-size: 11px; font-weight: 800; padding: 3px 6px; background: rgba(0,255,135,0.05); border: 1px solid var(--verde-neon); border-radius: 6px; text-shadow: 0 0 5px var(--verde-neon); display: inline-flex; align-items: center; gap: 2px; flex-shrink: 0; }
@@ -163,7 +161,6 @@
         let todosOsGrupos = [];
         let categoriaAtual = 'Todos';
 
-        // SISTEMA DE CARREGAMENTO OTIMIZADO (DOMContentLoaded)
         const screen = document.getElementById('loading-screen');
         if (!sessionStorage.getItem('primeiroAcessoConcluido')) {
             document.body.classList.add('com-loading');
@@ -192,8 +189,9 @@
 
         async function carregarGrupos() {
             try {
-                // ALTERAÇÃO DE OURO: Ordena por descrição descrescente (para priorizar tags [VIP]) e depois por cliques.
-                const url = `${SUPABASE_URL}/rest/v1/lista_grupos?aprovado=eq.true&order=descricao.desc,cliques.desc`;
+                // CORREÇÃO AQUI: Removemos a ordenação por texto que quebrava o banco.
+                // Agora ordena por cliques de forma decrescente (Mais clicados no topo)
+                const url = `${SUPABASE_URL}/rest/v1/lista_grupos?aprovado=eq.true&order=cliques.desc`;
                 const response = await fetch(url, {
                     method: 'GET',
                     headers: { "apikey": SUPABASE_KEY, "Authorization": "Bearer " + SUPABASE_KEY }
@@ -202,6 +200,15 @@
                 if(!response.ok) throw new Error();
                 
                 todosOsGrupos = await response.json();
+                
+                // MÁGICA DO JAVASCRIPT: Ordenamos os VIPs para o topo direto na memória do celular do usuário.
+                // Isso poupa processamento do banco de dados e nunca dá erro!
+                todosOsGrupos.sort((a, b) => {
+                    const aVip = a.descricao && a.descricao.includes("[VIP]") ? 1 : 0;
+                    const bVip = b.descricao && b.descricao.includes("[VIP]") ? 1 : 0;
+                    return bVip - aVip; 
+                });
+
                 calcularContadores();
                 filtrar(categoriaAtual);
             } catch (error) {
