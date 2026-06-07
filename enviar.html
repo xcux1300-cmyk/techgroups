@@ -176,7 +176,7 @@
         const SUPABASE_URL = "https://fufgsmmejwvibqkglkbv.supabase.co";
         const SUPABASE_KEY = "sb_publishable_KUq3cj4qjnjXdv2FEDQ5Xw_z9to0B5P";
 
-        // Gerenciamento idêntico da animação de loading inicial
+        // Gerenciamento da animação de loading inicial
         window.addEventListener('load', () => {
             setTimeout(() => {
                 const screen = document.getElementById('loading-screen');
@@ -189,7 +189,7 @@
             if(screen && screen.style.display !== 'none') screen.style.display = 'none';
         }, 2000);
 
-        // Envio de dados direto ao Supabase
+        // NOVA FUNÇÃO CORRIGIDA CONTRA ERROS DO SUPABASE
         async function enviarGrupo(event) {
             event.preventDefault();
             
@@ -204,9 +204,7 @@
                 link: document.getElementById('link').value,
                 categoria: document.getElementById('categoria').value,
                 descricao: document.getElementById('descricao').value,
-                aprovado: false, // Entra como falso para moderação por padrão
-                cliques: 0,
-                likes: 0
+                aprovado: false
             };
 
             try {
@@ -230,7 +228,9 @@
                         window.location.href = "index.html";
                     }, 3000);
                 } else {
-                    alert("Erro ao processar envio. Verifique os dados.");
+                    const erroTxt = await response.text();
+                    console.error("Erro do Banco:", erroTxt);
+                    alert("Erro ao processar envio. Verifique se os campos na tabela do Supabase estão corretos.");
                     btnSubmit.disabled = false;
                     btnSubmit.innerText = "SOLICITAR ANÚNCIO";
                 }
