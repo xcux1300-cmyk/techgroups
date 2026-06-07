@@ -1,123 +1,214 @@
-<!DOCTYPE html><html lang="pt-BR"><head>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DIVULGAR GRUPO - TELEGROUPS</title>
+    <title>Divulgar Grupo - TELEGROUPS</title>
     <style>
         :root {
             --bg-principal: #04060a;
             --bg-card: #0a0f1d;
             --verde-neon: #00ff87;
+            --azul-telegram: #0088cc;
             --texto-p: #798a9e;
             --texto-h: #ffffff;
             --borda: #141f36;
         }
+        
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: '-apple-system', BlinkMacSystemFont, sans-serif; }
-        body { background: var(--bg-principal); color: var(--texto-h); padding: 30px 15px; }
-        
-        .form-container { max-width: 450px; margin: 0 auto; background: var(--bg-card); border: 1px solid var(--borda); padding: 25px; border-radius: 14px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-        
-        h2 { font-size: 20px; font-weight: 900; margin-bottom: 20px; color: #fff; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px; }
-        h2 span { color: var(--verde-neon); }
+        body { background: var(--bg-principal); color: var(--texto-h); padding: 15px 0; overflow-x: hidden; }
+        .container { max-width: 500px; margin: 0 auto; padding: 0 15px; opacity: 0; animation: fadeInSite 0.5s 1.6s forwards; }
 
-        .grupo-input { margin-bottom: 18px; }
-        label { display: block; font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--texto-p); margin-bottom: 8px; letter-spacing: 1px; }
-        
-        input, select, textarea {
-            width: 100%; background: #04060a; border: 1px solid var(--borda); padding: 12px; border-radius: 8px;
-            color: #fff; font-size: 14px; transition: border 0.2s; outline: none;
+        /* TELA DE TRANSIÇÃO DE SEGURANÇA E CONFIANÇA */
+        #loading-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #04060a; z-index: 9999; display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
         }
-        input:focus, select:focus, textarea:focus { border-color: var(--verde-neon); }
+        .cyber-loader {
+            width: 50px; height: 50px; border: 3px solid transparent;
+            border-top-color: var(--verde-neon); border-radius: 50%;
+            animation: spin 0.8s linear infinite; margin-bottom: 20px;
+        }
+        .loading-text {
+            color: #ffffff; font-size: 13px; font-weight: 700;
+            letter-spacing: 0.5px; text-transform: uppercase;
+            animation: pulse 1s infinite alternate;
+            text-align: center; padding: 0 20px;
+        }
 
-        textarea { resize: none; height: 80px; }
+        /* LOGO ROTACIONANDO */
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid var(--borda); margin-bottom: 25px; }
+        .stratton-logo { display: flex; align-items: center; gap: 12px; }
+        
+        .circle-laurel {
+            width: 45px; height: 45px;
+            border: 3px dashed var(--verde-neon);
+            border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 0 15px rgba(0, 255, 135, 0.2);
+            animation: rotateSlow 20s linear infinite;
+        }
+        .circle-inner { width: 29px; height: 29px; border: 1px solid var(--verde-neon); border-radius: 50%; }
+        .logo-text { font-size: 22px; font-weight: 900; letter-spacing: 1px; color: var(--texto-h); }
+
+        .btn-voltar { 
+            background: transparent; color: var(--texto-p); border: 1px solid var(--borda);
+            padding: 6px 14px; text-decoration: none; border-radius: 6px; font-weight: 800; 
+            font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+
+        /* FORMULÁRIO ESTILO VITRINE PRO */
+        .box-formulario {
+            background: var(--bg-card);
+            border: 1px solid var(--borda);
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .box-formulario h2 {
+            font-size: 18px; font-weight: 800; margin-bottom: 6px; color: #fff;
+        }
+        .box-formulario p {
+            font-size: 13px; color: var(--texto-p); margin-bottom: 20px; line-height: 1.4;
+        }
+
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--texto-p); margin-bottom: 6px; letter-spacing: 0.5px; }
+        
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%; background: #04060a; border: 1px solid var(--borda);
+            padding: 12px; border-radius: 8px; color: #fff; font-size: 14px;
+            outline: none; transition: border-color 0.2s;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: var(--verde-neon);
+        }
+        .form-group textarea { resize: none; height: 80px; }
 
         .btn-salvar {
-            width: 100%; background: transparent; color: var(--verde-neon); border: 1px solid var(--verde-neon);
-            padding: 14px; border-radius: 8px; font-weight: 800; font-size: 13px; text-transform: uppercase;
-            letter-spacing: 1px; cursor: pointer; transition: all 0.2s; margin-top: 10px;
+            width: 100%; background: var(--verde-neon); color: var(--bg-principal);
+            padding: 14px; border: none; border-radius: 8px; font-weight: 800;
+            font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;
+            cursor: pointer; margin-top: 10px; transition: opacity 0.2s;
         }
-        .btn-salvar:hover { background: rgba(0, 255, 135, 0.05); }
-        .btn-salvar:disabled { border-color: var(--borda); color: var(--texto-p); cursor: not-allowed; }
+        .btn-salvar:disabled { opacity: 0.5; cursor: not-allowed; }
 
-        .btn-voltar { display: block; text-align: center; margin-top: 20px; color: var(--texto-p); text-decoration: none; font-size: 12px; font-weight: 700; }
-        .btn-voltar:hover { color: #fff; }
+        .aviso-sucesso {
+            display: none; background: rgba(0,255,135,0.06); border: 1px solid var(--verde-neon);
+            color: var(--verde-neon); padding: 15px; border-radius: 8px; text-align: center;
+            font-size: 13px; font-weight: 700; margin-top: 15px;
+        }
 
-        .msg-status { padding: 12px; border-radius: 8px; font-size: 13px; font-weight: 700; text-align: center; margin-top: 15px; display: none; }
-        .msg-sucesso { background: rgba(0, 255, 135, 0.1); color: var(--verde-neon); border: 1px solid var(--verde-neon); }
-        .msg-erro { background: rgba(255, 51, 68, 0.1); color: #ff3344; border: 1px solid #ff3344; }
+        /* ANIMAÇÕES GLOBAIS */
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes rotateSlow { to { transform: rotate(360deg); } }
+        @keyframes pulse { from { opacity: 0.4; } to { opacity: 1; } }
+        @keyframes fadeInSite { to { opacity: 1; } }
     </style>
 </head>
 <body>
 
-    <div class="form-container">
-        <h2><span>+</span> DIVULGAR NOVO LINK</h2>
-        
-        <form id="form-grupo" onsubmit="enviarGrupo(event)">
-            <div class="grupo-input">
-                <label>Nome do Grupo / Canal</label>
-                <input type="text" id="nome" placeholder="Ex: Devs do Futuro" required>
+    <!-- TELA DE ANTE-SALA COM GATILHO DE SEGURANÇA -->
+    <div id="loading-screen">
+        <div class="cyber-loader"></div>
+        <div class="loading-text">CONEXÃO SEGURA. Você está protegido neste site.</div>
+    </div>
+
+    <div class="container">
+        <!-- HEADER COM LOGO DA STRATTON ATIVA -->
+        <div class="header">
+            <div class="stratton-logo">
+                <div class="circle-laurel">
+                    <div class="circle-inner"></div>
+                </div>
+                <div class="logo-text">TELEGROUPS</div>
             </div>
+            <a href="index.html" class="btn-voltar">VOLTAR</a>
+        </div>
 
-            <div class="grupo-input">
-                <label>Categoria</label>
-                <select id="categoria" required>
-                    <option value="Programação">🖥️ Programação</option>
-                    <option value="Marketing">📈 Marketing</option>
-                    <option value="Design">🎨 Design</option>
-                    <option value="Negócios">💼 Negócios</option>
-                    <option value="Amizades">💬 Amizades</option>
-                    <option value="Apostas">🎲 Apostas</option>
-                    <option value="+18">🔞 +18</option>
-                </select>
+        <!-- FORMULÁRIO DE CADASTRO PRIVADO -->
+        <div class="box-formulario">
+            <h2>Impulsione seu Grupo</h2>
+            <p>Preencha os dados abaixo de forma segura para listar seu link diretamente na nossa vitrine pública.</p>
+
+            <form id="form-grupo" onsubmit="enviarGrupo(event)">
+                <div class="form-group">
+                    <label>Nome do Grupo / Canal</label>
+                    <input type="text" id="nome" placeholder="Ex: Marketing Digital Pro" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Link de Acesso (Telegram)</label>
+                    <input type="url" id="link" placeholder="Ex: https://t.me/seu_grupo" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Categoria Principal</label>
+                    <select id="categoria" required>
+                        <option value="" disabled selected>Selecione uma categoria...</option>
+                        <option value="Programação">🖥️ Programação</option>
+                        <option value="Marketing">📈 Marketing</option>
+                        <option value="Design">🎨 Design</option>
+                        <option value="Negócios">💼 Negócios</option>
+                        <option value="Amizades">💬 Amizades</option>
+                        <option value="Apostas">🎲 Apostas</option>
+                        <option value="+18">🔞 +18</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Breve Descrição</label>
+                    <textarea id="descricao" placeholder="Diga o que os membros vão encontrar no seu grupo..." maxlength="150" required></textarea>
+                </div>
+
+                <button type="submit" id="btn-submit" class="btn-salvar">SOLICITAR ANÚNCIO</button>
+            </form>
+
+            <div id="msg-sucesso" class="aviso-sucesso">
+                ✓ Enviado com segurança! Seu grupo será analisado e publicado em breve.
             </div>
-
-            <div class="grupo-input">
-                <label>Link de Convite (Telegram)</label>
-                <input type="url" id="link" placeholder="https://t.me/seu_link" required>
-            </div>
-
-            <div class="grupo-input">
-                <label>Breve Descrição</label>
-                <textarea id="descricao" maxlength="120" placeholder="Conte o que tem no seu grupo (Máx 120 caracteres)..." required></textarea>
-            </div>
-
-            <button type="submit" id="btn-submit" class="btn-salvar">ENVIAR PARA ANÁLISE</button>
-        </form>
-
-        <div id="status-msg" class="msg-status"></div>
-
-        <a href="index.html" class="btn-voltar">← Voltar para a Vitrine</a>
+        </div>
     </div>
 
     <script>
         const SUPABASE_URL = "https://fufgsmmejwvibqkglkbv.supabase.co";
         const SUPABASE_KEY = "sb_publishable_KUq3cj4qjnjXdv2FEDQ5Xw_z9to0B5P";
 
-        async function enviarGrupo(e) {
-            e.preventDefault();
+        // Gerenciamento da animação de loading inicial
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const screen = document.getElementById('loading-screen');
+                if(screen) screen.style.display = 'none';
+            }, 1500);
+        });
+
+        setTimeout(() => {
+            const screen = document.getElementById('loading-screen');
+            if(screen && screen.style.display !== 'none') screen.style.display = 'none';
+        }, 2000);
+
+        // NOVA FUNÇÃO CORRIGIDA CONTRA ERROS DO SUPABASE
+        async function enviarGrupo(event) {
+            event.preventDefault();
             
             const btnSubmit = document.getElementById('btn-submit');
-            const statusMsg = document.getElementById('status-msg');
+            const msgSucesso = document.getElementById('msg-sucesso');
             
-            const nome = document.getElementById('nome').value.trim();
-            const categoria = document.getElementById('categoria').value;
-            const link = document.getElementById('link').value.trim();
-            const descricao = document.getElementById('descricao').value.trim();
-
-            // Bloqueia links que não sejam do Telegram
-            if(!link.includes('t.me') && !link.includes('telegram.me')) {
-                statusMsg.className = "msg-status msg-erro";
-                statusMsg.innerText = "Por favor, insira um link válido do Telegram (t.me/...).";
-                statusMsg.style.display = "block";
-                return;
-            }
-
-            // Desativa botão contra Cliques Múltiplos (Anti-Spam)
             btnSubmit.disabled = true;
-            btnSubmit.innerText = "ENVIANDO PROTOCOLO...";
-            statusMsg.style.display = "none";
+            btnSubmit.innerText = "CRIPTOGRAFANDO DADOS...";
+
+            const dados = {
+                nome: document.getElementById('nome').value,
+                link: document.getElementById('link').value,
+                categoria: document.getElementById('categoria').value,
+                descricao: document.getElementById('descricao').value,
+                aprovado: false
+            };
 
             try {
-                const response = await fetch(`${SUPABASE_URL}/rest/v1/lista_grupos`, {
+                const response = await fetch(SUPABASE_URL + "/rest/v1/lista_grupos", {
                     method: 'POST',
                     headers: {
                         "apikey": SUPABASE_KEY,
@@ -125,33 +216,30 @@
                         "Content-Type": "application/json",
                         "Prefer": "return=minimal"
                     },
-                    body: JSON.stringify({
-                        nome: nome,
-                        categoria: categoria,
-                        link: link,
-                        descricao: descricao,
-                        aprovado: false, // Entra desativado para você moderar no painel
-                        likes: 0,
-                        cliques: 0
-                    })
+                    body: JSON.stringify(dados)
                 });
 
-                if(response.ok) {
-                    statusMsg.className = "msg-status msg-sucesso";
-                    statusMsg.innerText = "Sucesso! Seu link foi enviado e será verificado.";
-                    statusMsg.style.display = "block";
+                if (response.ok) {
+                    msgSucesso.style.display = 'block';
                     document.getElementById('form-grupo').reset();
+                    btnSubmit.innerText = "ENVIADO COM SUCESSO!";
+                    
+                    setTimeout(() => {
+                        window.location.href = "index.html";
+                    }, 3000);
                 } else {
-                    throw new Error();
+                    const erroTxt = await response.text();
+                    console.error("Erro do Banco:", erroTxt);
+                    alert("Erro ao processar envio. Verifique se os campos na tabela do Supabase estão corretos.");
+                    btnSubmit.disabled = false;
+                    btnSubmit.innerText = "SOLICITAR ANÚNCIO";
                 }
             } catch (error) {
-                statusMsg.className = "msg-status msg-erro";
-                statusMsg.innerText = "Erro ao processar envio. Tente novamente.";
-                statusMsg.style.display = "block";
-            } finally {
+                alert("Falha de conexão com a base de dados.");
                 btnSubmit.disabled = false;
-                btnSubmit.innerText = "ENVIAR PARA ANÁLISE";
+                btnSubmit.innerText = "SOLICITAR ANÚNCIO";
             }
         }
     </script>
-</body></html>
+</body>
+</html>
