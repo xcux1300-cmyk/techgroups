@@ -19,7 +19,6 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: '-apple-system', BlinkMacSystemFont, sans-serif; }
         body { background: var(--bg-principal); color: var(--texto-h); padding: 15px 0; overflow-x: hidden; }
         
-        /* Modificado para iniciar visível por padrão se já tiver visitado */
         .container { max-width: 500px; margin: 0 auto; padding: 0 15px; opacity: 1; }
         body.com-loading .container { opacity: 0; animation: fadeInSite 0.5s 1.6s forwards; }
 
@@ -93,11 +92,9 @@
         }
         .cat-btn .count-badge { background: rgba(255,255,255,0.08); color: var(--texto-p); padding: 1px 6px; border-radius: 6px; font-size: 10px; margin-left: 4px; }
         
-        /* Categoria Ativa */
         .cat-btn.active { border-color: var(--verde-neon); background: rgba(0,255,135,0.06); color: var(--verde-neon); }
         .cat-btn.active .count-badge { background: var(--verde-neon); color: var(--bg-principal); font-weight: 800; }
         
-        /* Filtro Especial +18 */
         .cat-btn[data-cat="+18"] { border-right: 2px solid var(--alerta-18); }
         .cat-btn[data-cat="+18"].active { border-color: var(--alerta-18); background: rgba(255,51,68,0.06); color: var(--alerta-18); }
         .cat-btn[data-cat="+18"].active .count-badge { background: var(--alerta-18); color: white; }
@@ -121,8 +118,11 @@
         .card-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.02); padding-top: 12px; }
         .btn-entrar { background: var(--azul-telegram); color: white; padding: 10px 24px; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; border: none; transition: background 0.2s; }
         
-        .like-zone { display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.02); padding: 8px 12px; border-radius: 8px; border: 1px solid var(--borda); }
-        .btn-like { background: none; border: none; cursor: pointer; font-size: 14px; }
+        /* ESTILOS DA ÁREA DE LIKE ALTERNÁVEL */
+        .like-zone { display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.02); padding: 8px 12px; border-radius: 8px; border: 1px solid var(--borda); transition: all 0.2s; }
+        .like-zone.liked { border-color: #ff9900; background: rgba(255,153,0,0.05); }
+        .btn-like { background: none; border: none; cursor: pointer; font-size: 14px; filter: grayscale(1); transition: filter 0.2s; }
+        .like-zone.liked .btn-like { filter: grayscale(0); }
         .like-count { color: white; font-weight: 700; font-size: 12px; }
 
         .loading { text-align: center; color: var(--texto-p); padding: 40px; font-size: 13px; font-weight: 600; }
@@ -178,7 +178,7 @@
         const SUPABASE_KEY = "sb_publishable_KUq3cj4qjnjXdv2FEDQ5Xw_z9to0B5P";
         let todosOsGrupos = [];
 
-        // SISTEMA DE MEMÓRIA DA SESSÃO (Evita repetição do loading)
+        // SISTEMA DE MEMÓRIA DA SESSÃO
         const screen = document.getElementById('loading-screen');
         if (!sessionStorage.getItem('primeiroAcessoConcluido')) {
             document.body.classList.add('com-loading');
@@ -247,11 +247,18 @@
             }
             statusNode.style.display = 'none';
 
+            // Carrega os IDs dos grupos que o usuário já curtiu do localStorage
+            const curtidos = JSON.parse(localStorage.getItem('grupos_curtidos')) || [];
+
             lista.forEach(grupo => {
                 const urlBanner = bannersCategoria[grupo.categoria] || bannersCategoria["Padrão"];
                 
                 const eVerificado = grupo.descricao && grupo.descricao.includes("[VIP]") ? '<span class="selo-verificado">⚡ VIP</span>' : '';
                 const descricaoLimpa = grupo.descricao ? grupo.descricao.replace("[VIP]", "") : 'Link ativo para transferência.';
+                
+                // Verifica se este grupo específico está curtido
+                const jaCurtiu = curtidos.includes(grupo.id);
+                const classeLiked = jaCurtiu ? 'liked' : '';
 
                 const card = document.createElement('div');
                 card.className = 'card';
@@ -264,8 +271,8 @@
                         </div>
                         <p>${descricaoLimpa}</p>
                         <div class="card-footer">
-                            <div class="like-zone">
-                                <button class="btn-like" onclick="darLike(event, ${grupo.id}, ${grupo.likes || 0})">🔥</button>
+                            <div class="like-zone ${classeLiked}" id="like-zone-${grupo.id}">
+                                <button class="btn-like" onclick="gerenciarLike(event, ${grupo.id})">🔥</button>
                                 <span class="like-count" id="like-count-${grupo.id}">${grupo.likes || 0}</span>
                             </div>
                             ${eVerificado}
@@ -290,12 +297,39 @@
             }
         }
 
-        async function darLike(event, id, likesAtuais) {
+        // NOVA FUNÇÃO DO BOTÃO DE CURTIR (LIGA / DESLIGA)
+        async function gerenciarLike(event, id) {
             if(event) event.stopPropagation();
-            const novoLike = likesAtuais + 1;
-            const elemento = document.getElementById(`like-count-${id}`);
-            if(elemento) elemento.innerText = novoLike;
             
+            let curtidos = JSON.parse(localStorage.getItem('grupos_curtidos')) || [];
+            const index = curtidos.indexOf(id);
+            
+            const elementoContador = document.getElementById(`like-count-${id}`);
+            const elementoZona = document.getElementById(`like-zone-${id}`);
+            let likesAtuais = parseInt(elementoContador.innerText) || 0;
+            let novoLike;
+
+            if (index === -1) {
+                // Caso não tenha curtido ainda: Adiciona curtida (+1)
+                novoLike = likesAtuais + 1;
+                curtidos.push(id);
+                if(elementoZona) elementoZona.classList.add('liked');
+            } else {
+                // Caso já tenha curtido antes: Retira curtida (-1)
+                novoLike = Math.max(0, likesAtuais - 1); // Evita curtidas negativas por segurança
+                curtidos.splice(index, 1);
+                if(elementoZona) elementoZona.classList.remove('liked');
+            }
+
+            // Atualiza na tela imediatamente
+            if(elementoContador) elementoContador.innerText = novoLike;
+            localStorage.setItem('grupos_curtidos', JSON.stringify(curtidos));
+            
+            // Sincroniza também no objeto local para não quebrar a filtragem temporária
+            const grupoLocal = todosOsGrupos.find(g => g.id === id);
+            if(grupoLocal) grupoLocal.likes = novoLike;
+
+            // Salva a alteração direto na tabela do Supabase
             await fetch(SUPABASE_URL + "/rest/v1/lista_grupos?id=eq." + id, {
                 method: 'PATCH',
                 headers: {
