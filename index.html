@@ -252,7 +252,6 @@
             }
             statusNode.style.display = 'none';
 
-            // Carrega a memória de quais grupos já foram curtidos por este navegador
             const curtidos = JSON.parse(localStorage.getItem('grupos_curtidos')) || [];
 
             lista.forEach(grupo => {
@@ -264,8 +263,8 @@
                 const jaCurtiu = curtidos.includes(grupo.id);
                 const classeLiked = jaCurtiu ? 'liked' : '';
                 
-                // Puxa o valor real vindo direto da coluna do Supabase
-                const contagemLikes = grupo.likes || 0;
+                // Correção anti-null: Garante que se o banco trouxer nulo, ele mostre 0
+                let contagemLikes = grupo.likes === null || grupo.likes === undefined ? 0 : grupo.likes;
 
                 const card = document.createElement('div');
                 card.className = 'card';
@@ -308,35 +307,35 @@
             }
         }
 
-        // GERENCIADOR DE LIKE SEGURO (Sincronizado Local e Nuvem)
         async function gerenciarLike(event, id) {
             if(event) event.stopPropagation();
             
             let curtidos = JSON.parse(localStorage.getItem('grupos_curtidos')) || [];
             const index = curtidos.indexOf(id);
             
-            // Procura o objeto do grupo na nossa lista principal global
             const grupoLocal = todosOsGrupos.find(g => g.id === id);
             if (!grupoLocal) return;
 
-            let likesAtuais = grupoLocal.likes || 0;
+            // Tratamento contra valores nulos iniciais
+            if(grupoLocal.likes === null || grupoLocal.likes === undefined) {
+                grupoLocal.likes = 0;
+            }
+
+            let likesAtuais = grupoLocal.likes;
             let novoLike;
 
             if (index === -1) {
-                // Adiciona curtida se não curtiu ainda
                 novoLike = likesAtuais + 1;
                 curtidos.push(id);
             } else {
-                // Retira curtida se clicou de novo
                 novoLike = Math.max(0, likesAtuais - 1);
                 curtidos.splice(index, 1);
             }
 
-            // Atualiza os dados na memória RAM global imediatamente
+            // Altera na memória local na hora
             grupoLocal.likes = novoLike;
             localStorage.setItem('grupos_curtidos', JSON.stringify(curtidos));
             
-            // Atualiza o visual das zonas na tela na hora
             const elementoContador = document.getElementById(`like-count-${id}`);
             const elementoZona = document.getElementById(`like-zone-${id}`);
             if(elementoContador) elementoContador.innerText = novoLike;
@@ -345,16 +344,20 @@
                 else elementoZona.classList.remove('liked');
             }
 
-            // Envia e fixa permanentemente a alteração dentro do Supabase
-            await fetch(SUPABASE_URL + "/rest/v1/lista_grupos?id=eq." + id, {
-                method: 'PATCH',
-                headers: {
-                    "apikey": SUPABASE_KEY,
-                    "Authorization": "Bearer " + SUPABASE_KEY,
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ likes: novoLike })
-            });
+            // Faz a requisição de atualização para o Supabase
+            try {
+                await fetch(SUPABASE_URL + "/rest/v1/lista_grupos?id=eq." + id, {
+                    method: 'PATCH',
+                    headers: {
+                        "apikey": SUPABASE_KEY,
+                        "Authorization": "Bearer " + SUPABASE_KEY,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ likes: novoLike })
+                });
+            } catch(e) {
+                console.error("Erro ao sincronizar curtida com o banco de dados.");
+            }
         }
 
         async function registrarClique(id, linkOriginal, cliquesAtuais) {
@@ -364,15 +367,17 @@
             const grupoLocal = todosOsGrupos.find(g => g.id === id);
             if(grupoLocal) grupoLocal.cliques = novosCliques;
 
-            await fetch(SUPABASE_URL + "/rest/v1/lista_grupos?id=eq." + id, {
-                method: 'PATCH',
-                headers: {
-                    "apikey": SUPABASE_KEY,
-                    "Authorization": "Bearer " + SUPABASE_KEY,
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ cliques: novosCliques })
-            });
+            try {
+                await fetch(SUPABASE_URL + "/rest/v1/lista_grupos?id=eq." + id, {
+                    method: 'PATCH',
+                    headers: {
+                        "apikey": SUPABASE_KEY,
+                        "Authorization": "Bearer " + SUPABASE_KEY,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ cliques: novosCliques })
+                });
+            } catch(e) {}
         }
 
         carregarGrupos();
