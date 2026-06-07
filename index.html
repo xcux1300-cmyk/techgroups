@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TELEGROUPS // Elite Directory</title>
+    <title>TELEGROUPS // Diretório Elite</title>
     <style>
         :root {
             --bg-principal: #04060a;
@@ -18,24 +18,7 @@
         
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: '-apple-system', BlinkMacSystemFont, sans-serif; }
         body { background: var(--bg-principal); color: var(--texto-h); padding: 15px; overflow-x: hidden; }
-        .container { max-width: 500px; margin: 0 auto; opacity: 0; animation: fadeInSite 1s 1.8s forwards; }
-
-        /* TELA DE LOADING CIBERNÉTICA (O SUSTO DO USUÁRIO) */
-        #loading-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #04060a; z-index: 9999; display: flex; flex-direction: column;
-            justify-content: center; align-items: center;
-        }
-        .cyber-loader {
-            width: 60px; height: 60px; border: 3px solid transparent;
-            border-top-color: var(--verde-neon); border-radius: 50%;
-            animation: spin 0.8s linear infinite; margin-bottom: 20px;
-        }
-        .loading-text {
-            color: var(--verde-neon); font-size: 11px; font-weight: 800;
-            letter-spacing: 3px; font-family: monospace; text-transform: uppercase;
-            animation: pulse 1s infinite alternate;
-        }
+        .container { max-width: 500px; margin: 0 auto; }
 
         /* LOGO ESTILO STRATTON OAKMONT (MOLDURA EM VERDE NEON) */
         .header { display: flex; flex-direction: column; align-items: center; padding: 25px 0; border-bottom: 1px solid var(--borda); margin-bottom: 15px; gap: 15px; }
@@ -61,11 +44,11 @@
             box-shadow: inset 0 0 10px rgba(0,255,135,0.05);
         }
 
-        /* ESPAÇO PARA ANÚNCIOS (MONETIZAÇÃO) */
+        /* ESPAÇO PARA ANÚNCIOS */
         .banner-anuncio { background: linear-gradient(45deg, #101226, #0a0f1d); border: 1px dashed #1e293b; border-radius: 10px; padding: 12px; text-align: center; margin-bottom: 15px; color: var(--texto-p); font-size: 12px; font-weight: 600; }
         .banner-anuncio span { color: var(--verde-neon); }
 
-        /* NAV DE CATEGORIAS CLICÁVEIS COM CONTADORES AUTOMÁTICOS */
+        /* NAV DE CATEGORIAS CLICÁVEIS E CONTADORES */
         .categorias-container { margin-bottom: 20px; }
         .categorias-nav { display: flex; flex-direction: column; gap: 8px; }
         
@@ -80,7 +63,6 @@
         .cat-btn.active { border-color: var(--verde-neon); background: rgba(0,255,135,0.03); }
         .cat-btn.active .count-badge { background: var(--verde-neon); color: var(--bg-principal); font-weight: 800; }
         
-        /* Categoria +18 com Alerta Visual */
         .cat-btn[data-cat="+18"] { border-left: 3px solid var(--alerta-18); }
         .cat-btn[data-cat="+18"].active { border-color: var(--alerta-18); background: rgba(255,51,68,0.03); }
         .cat-btn[data-cat="+18"].active .count-badge { background: var(--alerta-18); color: white; }
@@ -111,19 +93,10 @@
 
         .loading { text-align: center; color: var(--texto-p); padding: 30px; font-size: 13px; font-weight: 600; }
 
-        @keyframes spin { to { transform: rotate(360deg); } }
         @keyframes rotateSlow { to { transform: rotate(360deg); } }
-        @keyframes pulse { from { opacity: 0.4; } to { opacity: 1; } }
-        @keyframes fadeInSite { to { opacity: 1; } }
     </style>
 </head>
 <body>
-
-    <!-- LOADING SCREEN -->
-    <div id="loading-screen">
-        <div class="cyber-loader"></div>
-        <div class="loading-text">ESTABLISHING SECURE PROTOCOL...</div>
-    </div>
 
     <div class="container">
         <div class="header">
@@ -136,12 +109,10 @@
             <a href="enviar.html" class="btn-enviar">+ SOLICITAR LISTAGEM</a>
         </div>
 
-        <!-- ESPAÇO MONETIZAÇÃO -->
         <div class="banner-anuncio">
             SISTEMA DE TRÁFEGO PRIVADO. ANUNCIE: <span>t.me/seu_suporte</span>
         </div>
-        
-        <!-- CATEGORIAS CLICÁVEIS E CONTADORES -->
+
         <div class="categorias-container">
             <div class="categorias-nav">
                 <button class="cat-btn active" onclick="filtrar('Todos')">⚡ VER TODOS OS CANAIS <span class="count-badge" id="count-Todos">0</span></button>
@@ -155,7 +126,7 @@
             </div>
         </div>
 
-        <div id="status" class="loading">Descriptografando dados...</div>
+        <div id="status" class="loading">Carregando grupos ativos...</div>
         <div id="grupos-container" class="grid-grupos"></div>
     </div>
 
@@ -175,11 +146,6 @@
             "Padrão": "https://images.unsplash.com/photo-1614741118887-7a4ee193a5fa?w=500&q=60"
         };
 
-        setTimeout(() => {
-            const screen = document.getElementById('loading-screen');
-            if(screen) screen.style.display = 'none';
-        }, 1500);
-
         async function carregarGrupos() {
             try {
                 const url = SUPABASE_URL + "/rest/v1/lista_grupos?aprovado=eq.true&select=*";
@@ -192,7 +158,7 @@
                 calcularContadores();
                 renderizar(todosOsGrupos);
             } catch (error) {
-                document.getElementById('status').innerText = "Falha de sincronização.";
+                document.getElementById('status').innerText = "Erro ao carregar dados.";
             }
         }
 
@@ -211,7 +177,7 @@
             container.innerHTML = '';
             
             if (lista.length === 0) {
-                statusNode.innerText = "Nenhum canal ativo nesta frequência.";
+                statusNode.innerText = "Nenhum canal ativo nesta categoria.";
                 statusNode.style.display = 'block';
                 return;
             }
@@ -221,9 +187,8 @@
                 const urlBanner = bannersCategoria[grupo.categoria] || bannersCategoria["Padrão"];
                 
                 // SELO VERIFICADO COM RAIO (⚡) ATIVADO VIA TAG [VIP]
-                const eVerificado = grupo.descricao && grupo.descricao.includes("[VIP]") ? '<span class="selo-verificado">⚡ SYSTEM LOCK</span>' : '';
-                const descricaoLimpa = grupo.descricao ? grupo.descricao.replace("[VIP]", "") : 'Link encriptado e ativo para transferência.';
-
+                const eVerificado = grupo.descricao && grupo.descricao.includes("[VIP]") ? '<span class="selo-verificado">⚡ VIP</span>' : '';
+                const descricaoLimpa = grupo.descricao ? grupo.descricao.replace("[VIP]", "") : 'Link ativo para transferência.';
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.innerHTML = 
@@ -240,7 +205,7 @@
                                 <span class="like-count" id="like-count-${grupo.id}">${grupo.likes || 0}</span>
                             </div>
                             ${eVerificado}
-                            <button class="btn-entrar" onclick="registrarClique(${grupo.id}, '${grupo.link}', ${grupo.cliques || 0})">CONNECT</button>
+                            <button class="btn-entrar" onclick="registrarClique(${grupo.id}, '${grupo.link}', ${grupo.cliques || 0})">ACESSAR</button>
                         </div>
                     </div>
                 ;
@@ -274,7 +239,6 @@
             });
         }
 
-        // NOVO CONTADOR DE CLIQUES AUTOMÁTICO
         async function registrarClique(id, linkOriginal, cliquesAtuais) {
             const novosCliques = cliquesAtuais + 1;
             window.open(linkOriginal, '_blank');
