@@ -211,7 +211,7 @@
             "Negócios": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=500&q=60",
             "Amizades": "https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=500&q=60",
             "Apostas": "https://images.unsplash.com/photo-1596838132731-3301c3fd4317?w=500&q=60",
-            "+18": "https://cdn.pixabay.com/photo/2021/01/29/14/41/woman-5961222_640.jpg",
+            "+18": "https://telegram.org/file/464001831/1/h_4HnEAsgO4.116551/97fe5b7077a41da101",
             "Padrão": "https://images.unsplash.com/photo-1614741118887-7a4ee193a5fa?w=500&q=60"
         };
 
@@ -293,7 +293,7 @@
             categoriaAtual = categoria;
             document.querySelectorAll('.cat-btn').forEach(b => {
                 b.classList.remove('active');
-                if(b.getAttribute('data-cat') === categoria || (categoria === 'Todos' && b.innerText.includes('Todos'))) {
+                if(b.getAttribute('data-cat') === category || (categoria === 'Todos' && b.innerText.includes('Todos'))) {
                     b.classList.add('active');
                 }
             });
