@@ -136,14 +136,12 @@
 </head>
 <body>
 
-    <!-- TELA DE CARREGAMENTO SEGURO -->
     <div id="loading-screen" style="display: none;">
         <div class="cyber-loader"></div>
         <div class="loading-text">ESTABELECENDO PROTOCOLO DE SEGURANÇA...</div>
     </div>
 
     <div class="container" id="main-container">
-        <!-- HEADER COM LOGO DA STRATTON ATIVA -->
         <div class="header">
             <div class="stratton-logo">
                 <div class="circle-laurel">
@@ -154,12 +152,10 @@
             <a href="enviar.html" class="btn-enviar">+ DIVULGAR</a>
         </div>
 
-        <!-- VITRINE DE ANÚNCIOS -->
         <div class="banner-anuncio">
             SISTEMA DE TRÁFEGO PRIVADO. ANUNCIE: <span>t.me/seu_suporte</span>
         </div>
 
-        <!-- FILTROS EM LINHA RETA HORIZONTAL DESLIZÁVEL -->
         <div class="categorias-container">
             <div class="categorias-nav">
                 <button class="cat-btn active" onclick="filtrar('Todos')">⚡ Todos os Grupos <span class="count-badge" id="count-Todos">0</span></button>
@@ -211,7 +207,7 @@
             "Negócios": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=500&q=60",
             "Amizades": "https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=500&q=60",
             "Apostas": "https://images.unsplash.com/photo-1596838132731-3301c3fd4317?w=500&q=60",
-            "+18": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=500&q=60",
+            "+18": "https://images.unsplash.com/photo-1518622358385-8ea7d0794bf6?w=500&q=60",
             "Padrão": "https://images.unsplash.com/photo-1614741118887-7a4ee193a5fa?w=500&q=60"
         };
 
@@ -263,7 +259,6 @@
                 const jaCurtiu = curtidos.includes(grupo.id);
                 const classeLiked = jaCurtiu ? 'liked' : '';
                 
-                // Correção anti-null: Garante que se o banco trouxer nulo, ele mostre 0
                 let contagemLikes = grupo.likes === null || grupo.likes === undefined ? 0 : grupo.likes;
 
                 const card = document.createElement('div');
@@ -316,7 +311,6 @@
             const grupoLocal = todosOsGrupos.find(g => g.id === id);
             if (!grupoLocal) return;
 
-            // Tratamento contra valores nulos iniciais
             if(grupoLocal.likes === null || grupoLocal.likes === undefined) {
                 grupoLocal.likes = 0;
             }
@@ -332,7 +326,6 @@
                 curtidos.splice(index, 1);
             }
 
-            // Altera na memória local na hora
             grupoLocal.likes = novoLike;
             localStorage.setItem('grupos_curtidos', JSON.stringify(curtidos));
             
@@ -344,7 +337,6 @@
                 else elementoZona.classList.remove('liked');
             }
 
-            // Faz a requisição de atualização para o Supabase
             try {
                 await fetch(SUPABASE_URL + "/rest/v1/lista_grupos?id=eq." + id, {
                     method: 'PATCH',
