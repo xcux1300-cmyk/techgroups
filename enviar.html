@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enviar Novo Grupo - TechGroups</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto; padding: 20px; background: #f4f4f9; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        button { background: #22c55e; color: white; border: none; padding: 12px; width: 100%; border-radius: 5px; font-size: 16px; cursor: pointer; font-weight: bold; }
+        .back-link { display: block; text-align: center; margin-top: 15px; color: #0070f3; text-decoration: none; }
+    </style>
+</head>
+<body>
+
+    <h2>Divulgue seu Grupo do Telegram 🚀</h2>
+    
+    <form id="grupo-form">
+        <div class="form-group">
+            <label>Nome do Grupo:</label>
+            <input type="text" id="nome" required placeholder="Ex: Devs Telegram Brasil">
+        </div>
+        <div class="form-group">
+            <label>Link do Grupo (Telegram):</label>
+            <input type="url" id="link" required placeholder="Ex: https://t.me/seu_grupo">
+        </div>
+        <div class="form-group">
+            <label>Categoria:</label>
+            <select id="categoria">
+                <option value="Programação">Programação</option>
+                <option value="Marketing">Marketing</option>
+                <option value="Design">Design</option>
+                <option value="Negócios">Negócios</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Descrição (Opcional):</label>
+            <textarea id="descricao" rows="3" placeholder="Fale um pouco sobre as regras ou foco do grupo..."></textarea>
+        </div>
+        <button type="submit">Cadastrar Grupo</button>
+    </form>
+
+    <a href="index.html" class="back-link">← Voltar para a lista</a>
+
+    <script>
+        const SUPABASE_URL = "https://fufgsmmejwvibqkglkbv.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_KUq3cj4qjnjXdv2FEDQ5Xw_z9to0B5P";
+
+        document.getElementById('grupo-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const dados = {
+                nome: document.getElementById('nome').value,
+                link: document.getElementById('link').value,
+                categoria: document.getElementById('categoria').value,
+                descricao: document.getElementById('descricao').value
+            };
+
+            try {
+                const response = await fetch(${SUPABASE_URL}/rest/v1/lista_grupos, {
+                    method: 'POST',
+                    headers: {
+                        "apikey": SUPABASE_KEY,
+                        "Authorization": Bearer ${SUPABASE_KEY},
+                        "Content-Type": "application/json",
+                        "Prefer": "return=minimal"
+                    },
+                    body: JSON.stringify(dados)
+                });
+
+                if (response.ok) {
+                    alert('Grupo do Telegram cadastrado com sucesso!');
+                    window.location.href = 'index.html';
+                } else {
+                    alert('Erro ao cadastrar grupo.');
+                }
+            } catch (error) {
+                alert('Erro na conexão com o banco.');
+            }
+        });
+    </script>
+</body>
+</html>
