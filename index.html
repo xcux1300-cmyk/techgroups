@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="pt-BR"><head>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>TELEGROUPS</title>
@@ -18,8 +20,9 @@
         body { background: var(--bg-principal); color: var(--texto-h); padding: 15px 0; overflow-x: hidden; }
         
         .container { max-width: 500px; margin: 0 auto; padding: 0 15px; opacity: 1; }
-        body.com-loading .container { opacity: 0; animation: fadeInSite 0.5s 0.3s forwards; }
+        body.com-loading .container { opacity: 0; animation: fadeInSite 0.5s 1.6s forwards; }
 
+        /* TELA DE CARREGAMENTO HACKER EM PORTUGUÊS */
         #loading-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #04060a; z-index: 9999; display: flex; flex-direction: column;
@@ -33,9 +36,11 @@
         .loading-text {
             color: var(--verde-neon); font-size: 11px; font-weight: 800;
             letter-spacing: 3px; font-family: monospace; text-transform: uppercase;
-            animation: pulse 1s infinite alternate; text-align: center; padding: 0 20px;
+            animation: pulse 1s infinite alternate;
+            text-align: center; padding: 0 20px;
         }
 
+        /* LOGO ESTILO STRATTON OAKMONT ROTACIONANDO */
         .header { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid var(--borda); margin-bottom: 15px; }
         .stratton-logo { display: flex; align-items: center; gap: 12px; }
         
@@ -48,31 +53,42 @@
             animation: rotateSlow 20s linear infinite;
         }
         .circle-inner { width: 29px; height: 29px; border: 1px solid var(--verde-neon); border-radius: 50%; }
+        
         .logo-text { font-size: 22px; font-weight: 900; letter-spacing: 1px; color: var(--texto-h); }
 
-        .btn-enviar {
-             background: transparent; color: var(--verde-neon); border: 1px solid var(--verde-neon);
-             padding: 6px 14px; text-decoration: none; border-radius: 6px; font-weight: 800;
-             font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;
+        .btn-enviar { 
+            background: transparent; color: var(--verde-neon); border: 1px solid var(--verde-neon);
+            padding: 6px 14px; text-decoration: none; border-radius: 6px; font-weight: 800; 
+            font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;
         }
 
+        /* BANNER DE ANÚNCIO FLUIDO */
         .banner-anuncio { background: linear-gradient(45deg, #101226, #0a0f1d); border: 1px dashed #1e293b; border-radius: 10px; padding: 12px; text-align: center; margin-bottom: 15px; color: var(--texto-p); font-size: 12px; font-weight: 600; }
         .banner-anuncio span { color: var(--verde-neon); }
 
-        .categorias-container {
-             margin-bottom: 20px; width: 100%; overflow-x: auto; white-space: nowrap;
-             padding: 5px 15px; margin-left: -15px; width: calc(100% + 30px);
-             -webkit-overflow-scrolling: touch;
+        /* NAVEGAÇÃO HORIZONTAL EM LINHA RETA (SLIDER DE CATEGORIAS) */
+        .categorias-container { 
+            margin-bottom: 20px; 
+            width: 100%;
+            overflow-x: auto; 
+            white-space: nowrap;
+            padding: 5px 15px;
+            margin-left: -15px;
+            width: calc(100% + 30px);
+            -webkit-overflow-scrolling: touch;
         }
         .categorias-container::-webkit-scrollbar { display: none; }
         
         .categorias-nav { display: inline-flex; gap: 8px; }
         
         .cat-btn {
-            display: inline-flex; align-items: center; gap: 6px;
-            background: var(--bg-card); border: 1px solid var(--borda); color: var(--texto-h);
-            padding: 10px 16px; border-radius: 20px; cursor: pointer; font-size: 13px;
-            font-weight: 700; transition: all 0.2s ease; flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--bg-card); border: 1px solid var(--borda); color: var(--texto-h); 
+            padding: 10px 16px; border-radius: 20px; cursor: pointer; font-size: 13px; 
+            font-weight: 700; transition: all 0.2s ease;
+            flex-shrink: 0;
         }
         .cat-btn .count-badge { background: rgba(255,255,255,0.08); color: var(--texto-p); padding: 1px 6px; border-radius: 6px; font-size: 10px; margin-left: 4px; }
         
@@ -83,6 +99,7 @@
         .cat-btn[data-cat="+18"].active { border-color: var(--alerta-18); background: rgba(255,51,68,0.06); color: var(--alerta-18); }
         .cat-btn[data-cat="+18"].active .count-badge { background: var(--alerta-18); color: white; }
 
+        /* MARKETPLACE DE GRUPOS */
         .grid-grupos { display: flex; flex-direction: column; gap: 16px; }
         .card { background: var(--bg-card); border: 1px solid var(--borda); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
         
@@ -91,17 +108,17 @@
 
         .card-corpo { padding: 16px; position: relative; margin-top: -20px; z-index: 2; }
         .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 10px; }
-        
-        .card h3 { font-size: 18px; font-weight: 800; color: #fff; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+        .card h3 { font-size: 18px; font-weight: 800; color: #fff; line-height: 1.2; }
         
         .selo-verificado { color: var(--verde-neon); font-size: 11px; font-weight: 800; padding: 3px 6px; background: rgba(0,255,135,0.05); border: 1px solid var(--verde-neon); border-radius: 6px; text-shadow: 0 0 5px var(--verde-neon); display: inline-flex; align-items: center; gap: 2px; flex-shrink: 0; }
         .badge { background: rgba(255,255,255,0.05); color: var(--texto-p); font-size: 10px; padding: 3px 8px; border-radius: 5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
         
-        .card p { color: var(--texto-p); font-size: 13.5px; line-height: 1.4; margin-bottom: 16px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 38px; }
+        .card p { color: var(--texto-p); font-size: 13.5px; line-height: 1.4; margin-bottom: 16px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
         
         .card-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.02); padding-top: 12px; }
         .btn-entrar { background: var(--azul-telegram); color: white; padding: 10px 24px; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; border: none; transition: background 0.2s; }
         
+        /* ESTILOS DA ÁREA DE LIKE ALTERNÁVEL */
         .like-zone { display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.02); padding: 8px 12px; border-radius: 8px; border: 1px solid var(--borda); transition: all 0.2s; }
         .like-zone.liked { border-color: #ff9900; background: rgba(255,153,0,0.05); }
         .btn-like { background: none; border: none; cursor: pointer; font-size: 14px; filter: grayscale(1); transition: filter 0.2s; }
@@ -110,6 +127,7 @@
 
         .loading { text-align: center; color: var(--texto-p); padding: 40px; font-size: 13px; font-weight: 600; }
 
+        /* ANIMAÇÕES */
         @keyframes spin { to { transform: rotate(360deg); } }
         @keyframes rotateSlow { to { transform: rotate(360deg); } }
         @keyframes pulse { from { opacity: 0.4; } to { opacity: 1; } }
@@ -118,7 +136,7 @@
 </head>
 <body>
 
-    <div id="loading-screen">
+    <div id="loading-screen" style="display: none;">
         <div class="cyber-loader"></div>
         <div class="loading-text">ESTABELECENDO PROTOCOLO DE SEGURANÇA...</div>
     </div>
@@ -140,7 +158,7 @@
 
         <div class="categorias-container">
             <div class="categorias-nav">
-                <button class="cat-btn active" data-cat="Todos" onclick="filtrar('Todos')">⚡ Todos os Grupos <span class="count-badge" id="count-Todos">0</span></button>
+                <button class="cat-btn active" onclick="filtrar('Todos')">⚡ Todos os Grupos <span class="count-badge" id="count-Todos">0</span></button>
                 <button class="cat-btn" data-cat="Programação" onclick="filtrar('Programação')">🖥️ Programação <span class="count-badge" id="count-Programação">0</span></button>
                 <button class="cat-btn" data-cat="Marketing" onclick="filtrar('Marketing')">📈 Marketing <span class="count-badge" id="count-Marketing">0</span></button>
                 <button class="cat-btn" data-cat="Design" onclick="filtrar('Design')">🎨 Design <span class="count-badge" id="count-Design">0</span></button>
@@ -161,19 +179,25 @@
         let todosOsGrupos = [];
         let categoriaAtual = 'Todos';
 
+        // SISTEMA DE MEMÓRIA DA SESSÃO
         const screen = document.getElementById('loading-screen');
         if (!sessionStorage.getItem('primeiroAcessoConcluido')) {
             document.body.classList.add('com-loading');
             screen.style.display = 'flex';
             
-            window.addEventListener('DOMContentLoaded', () => {
+            window.addEventListener('load', () => {
                 setTimeout(() => {
                     screen.style.display = 'none';
                     sessionStorage.setItem('primeiroAcessoConcluido', 'true');
-                }, 1000);
+                }, 1500);
             });
-        } else {
-            screen.style.display = 'none';
+
+            setTimeout(() => {
+                if(screen.style.display !== 'none') {
+                    screen.style.display = 'none';
+                    sessionStorage.setItem('primeiroAcessoConcluido', 'true');
+                }
+            }, 2000);
         }
 
         const bannersCategoria = {
@@ -183,37 +207,23 @@
             "Negócios": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=500&q=60",
             "Amizades": "https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=500&q=60",
             "Apostas": "https://images.unsplash.com/photo-1596838132731-3301c3fd4317?w=500&q=60",
-            "+18": "https://p2.trrsf.com/image/fget/cf/940/0/images.terra.com/2021/01/29/juliana-caetano-piscina-instagram.jpg",
+            "+18": "https://p2.trrsf.com/image/fget/cf/940/0/images.terra.com/2021/01/29/juliana-caetano-piscina-instagram.jpg", // Imagem da Juliana Caetano atualizada
             "Padrão": "https://images.unsplash.com/photo-1614741118887-7a4ee193a5fa?w=500&q=60"
         };
 
         async function carregarGrupos() {
             try {
-                // CORREÇÃO AQUI: Removemos a ordenação por texto que quebrava o banco.
-                // Agora ordena por cliques de forma decrescente (Mais clicados no topo)
-                const url = `${SUPABASE_URL}/rest/v1/lista_grupos?aprovado=eq.true&order=cliques.desc`;
+                const url = SUPABASE_URL + "/rest/v1/lista_grupos?aprovado=eq.true&select=*";
                 const response = await fetch(url, {
                     method: 'GET',
                     headers: { "apikey": SUPABASE_KEY, "Authorization": "Bearer " + SUPABASE_KEY }
                 });
-                
-                if(!response.ok) throw new Error();
-                
                 todosOsGrupos = await response.json();
                 
-                // MÁGICA DO JAVASCRIPT: Ordenamos os VIPs para o topo direto na memória do celular do usuário.
-                // Isso poupa processamento do banco de dados e nunca dá erro!
-                todosOsGrupos.sort((a, b) => {
-                    const aVip = a.descricao && a.descricao.includes("[VIP]") ? 1 : 0;
-                    const bVip = b.descricao && b.descricao.includes("[VIP]") ? 1 : 0;
-                    return bVip - aVip; 
-                });
-
                 calcularContadores();
                 filtrar(categoriaAtual);
             } catch (error) {
-                document.getElementById('status').innerText = "Erro na conexão ou banco vazio.";
-                document.getElementById('grupos-container').innerHTML = '';
+                document.getElementById('status').innerText = "Erro na conexão.";
             }
         }
 
@@ -242,16 +252,19 @@
 
             lista.forEach(grupo => {
                 const urlBanner = bannersCategoria[grupo.categoria] || bannersCategoria["Padrão"];
+                
                 const eVerificado = grupo.descricao && grupo.descricao.includes("[VIP]") ? '<span class="selo-verificado">⚡ VIP</span>' : '';
                 const descricaoLimpa = grupo.descricao ? grupo.descricao.replace("[VIP]", "") : 'Link ativo para transferência.';
+                
                 const jaCurtiu = curtidos.includes(grupo.id);
                 const classeLiked = jaCurtiu ? 'liked' : '';
-                let contagemLikes = grupo.likes || 0;
+                
+                let contagemLikes = grupo.likes === null || grupo.likes === undefined ? 0 : grupo.likes;
 
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.innerHTML = `
-                    <div class="card-banner" style="background-image: url('${urlBanner}'), url('${bannersCategoria["Padrão"]}')"></div>
+                    <div class="card-banner" style="background-image: url('${urlBanner}')"></div>
                     <div class="card-corpo">
                         <div class="card-header">
                             <h3>${grupo.nome}</h3>
@@ -276,7 +289,7 @@
             categoriaAtual = categoria;
             document.querySelectorAll('.cat-btn').forEach(b => {
                 b.classList.remove('active');
-                if(b.getAttribute('data-cat') === categoria) {
+                if(b.getAttribute('data-cat') === categoria || (categoria === 'Todos' && b.innerText.includes('Todos'))) {
                     b.classList.add('active');
                 }
             });
@@ -291,52 +304,63 @@
 
         async function gerenciarLike(event, id) {
             if(event) event.stopPropagation();
+            
             let curtidos = JSON.parse(localStorage.getItem('grupos_curtidos')) || [];
             const index = curtidos.indexOf(id);
+            
             const grupoLocal = todosOsGrupos.find(g => g.id === id);
             if (!grupoLocal) return;
 
-            grupoLocal.likes = grupoLocal.likes || 0;
+            if(grupoLocal.likes === null || grupoLocal.likes === undefined) {
+                grupoLocal.likes = 0;
+            }
+
+            let likesAtuais = grupoLocal.likes;
+            let novoLike;
+
             if (index === -1) {
-                grupoLocal.likes += 1;
+                novoLike = likesAtuais + 1;
                 curtidos.push(id);
             } else {
-                grupoLocal.likes = Math.max(0, grupoLocal.likes - 1);
+                novoLike = Math.max(0, likesAtuais - 1);
                 curtidos.splice(index, 1);
             }
 
+            grupoLocal.likes = novoLike;
             localStorage.setItem('grupos_curtidos', JSON.stringify(curtidos));
             
             const elementoContador = document.getElementById(`like-count-${id}`);
             const elementoZona = document.getElementById(`like-zone-${id}`);
-            if(elementoContador) elementoContador.innerText = grupoLocal.likes;
+            if(elementoContador) elementoContador.innerText = novoLike;
             if(elementoZona) {
                 if (index === -1) elementoZona.classList.add('liked');
                 else elementoZona.classList.remove('liked');
             }
 
             try {
-                await fetch(`${SUPABASE_URL}/rest/v1/lista_grupos?id=eq.${id}`, {
+                await fetch(SUPABASE_URL + "/rest/v1/lista_grupos?id=eq." + id, {
                     method: 'PATCH',
                     headers: {
                         "apikey": SUPABASE_KEY,
                         "Authorization": "Bearer " + SUPABASE_KEY,
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({ likes: grupoLocal.likes })
+                    body: JSON.stringify({ likes: novoLike })
                 });
-            } catch(e) {}
+            } catch(e) {
+                console.error("Erro ao sincronizar curtida com o banco de dados.");
+            }
         }
 
         async function registrarClique(id, linkOriginal, cliquesAtuais) {
+            const novosCliques = cliquesAtuais + 1;
             window.open(linkOriginal, '_blank');
+
             const grupoLocal = todosOsGrupos.find(g => g.id === id);
-            const novosCliques = (grupoLocal ? grupoLocal.cliques || 0 : cliquesAtuais) + 1;
-            
             if(grupoLocal) grupoLocal.cliques = novosCliques;
 
             try {
-                await fetch(`${SUPABASE_URL}/rest/v1/lista_grupos?id=eq.${id}`, {
+                await fetch(SUPABASE_URL + "/rest/v1/lista_grupos?id=eq." + id, {
                     method: 'PATCH',
                     headers: {
                         "apikey": SUPABASE_KEY,
@@ -350,4 +374,5 @@
 
         carregarGrupos();
     </script>
-</body></html>
+</body>
+</html>
