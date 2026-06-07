@@ -103,8 +103,19 @@
         .grid-grupos { display: flex; flex-direction: column; gap: 16px; }
         .card { background: var(--bg-card); border: 1px solid var(--borda); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
         
-        .card-banner { height: 110px; background-size: cover; background-position: center; position: relative; filter: brightness(0.85); }
-        .card-banner::after { content: ''; position: absolute; width: 100%; height: 100%; background: linear-gradient(to bottom, transparent 30%, var(--bg-card)); }
+        /* BANNER COM GRADIENTES E EMOJIS INFALÍVEIS */
+        .card-banner { height: 110px; position: relative; display: flex; align-items: center; justify-content: center; font-size: 42px; }
+        .card-banner::after { content: ''; position: absolute; width: 100%; height: 100%; background: linear-gradient(to bottom, transparent 20%, var(--bg-card)); top: 0; left: 0; }
+
+        /* CLASSES DE CORES DO BANNER POR CATEGORIA */
+        .banner-programacao { background: linear-gradient(135deg, #0f172a, #1e293b); }
+        .banner-marketing { background: linear-gradient(135deg, #1e1b4b, #312e81); }
+        .banner-design { background: linear-gradient(135deg, #581c87, #701a75); }
+        .banner-negocios { background: linear-gradient(135deg, #14532d, #064e3b); }
+        .banner-amizades { background: linear-gradient(135deg, #7c2d12, #78350f); }
+        .banner-apostas { background: linear-gradient(135deg, #881337, #4c0519); }
+        .banner-adulto { background: linear-gradient(135deg, #b91c1c, #450a0a); font-size: 50px !important; animation: pulseGlow 2s infinite alternate; } /* Destacado para Safadeza */
+        .banner-padrao { background: linear-gradient(135deg, #1c1917, #292524); }
 
         .card-corpo { padding: 16px; position: relative; margin-top: -20px; z-index: 2; }
         .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 10px; }
@@ -131,6 +142,7 @@
         @keyframes spin { to { transform: rotate(360deg); } }
         @keyframes rotateSlow { to { transform: rotate(360deg); } }
         @keyframes pulse { from { opacity: 0.4; } to { opacity: 1; } }
+        @keyframes pulseGlow { from { transform: scale(1); filter: brightness(0.9); } to { transform: scale(1.02); filter: brightness(1.2); } }
         @keyframes fadeInSite { to { opacity: 1; } }
     </style>
 </head>
@@ -204,15 +216,16 @@
             }, 2000);
         }
 
-        const bannersCategoria = {
-            "Programação": "https://images.unsplash.com/photo-1607799279861-4dd421887fb3?w=500&q=60",
-            "Marketing": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500&q=60",
-            "Design": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=500&q=60",
-            "Negócios": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=500&q=60",
-            "Amizades": "https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=500&q=60",
-            "Apostas": "https://images.unsplash.com/photo-1596838132731-3301c3fd4317?w=500&q=60",
-            "+18": "https://telegram.org/file/464001831/1/h_4HnEAsgO4.116551/97fe5b7077a41da101",
-            "Padrão": "https://images.unsplash.com/photo-1614741118887-7a4ee193a5fa?w=500&q=60"
+        // DESIGN INTEGRADO DE ESTILO E ICONOGRAFIA PARA CADA CATEGORIA
+        const configsCategoria = {
+            "Programação": { classe: "banner-programacao", icon: "🖥️" },
+            "Marketing": { classe: "banner-marketing", icon: "📈" },
+            "Design": { classe: "banner-design", icon: "🎨" },
+            "Negócios": { classe: "banner-negocios", icon: "💼" },
+            "Amizades": { classe: "banner-amizades", icon: "💬" },
+            "Apostas": { classe: "banner-apostas", icon: "🎲" },
+            "+18": { classe: "banner-adulto", icon: "🍑🔞" }, // Banner quente focado em Safadeza
+            "Padrão": { classe: "banner-padrao", icon: "📱" }
         };
 
         async function carregarGrupos() {
@@ -255,7 +268,7 @@
             const curtidos = JSON.parse(localStorage.getItem('grupos_curtidos')) || [];
 
             lista.forEach(grupo => {
-                const urlBanner = bannersCategoria[grupo.categoria] || bannersCategoria["Padrão"];
+                const conf = configsCategoria[grupo.categoria] || configsCategoria["Padrão"];
                 
                 const eVerificado = grupo.descricao && grupo.descricao.includes("[VIP]") ? '<span class="selo-verificado">⚡ VIP</span>' : '';
                 const descricaoLimpa = grupo.descricao ? grupo.descricao.replace("[VIP]", "") : 'Link ativo para transferência.';
@@ -268,7 +281,7 @@
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.innerHTML = `
-                    <div class="card-banner" style="background-image: url('${urlBanner}')"></div>
+                    <div class="card-banner ${conf.classe}">${conf.icon}</div>
                     <div class="card-corpo">
                         <div class="card-header">
                             <h3>${grupo.nome}</h3>
@@ -293,7 +306,7 @@
             categoriaAtual = categoria;
             document.querySelectorAll('.cat-btn').forEach(b => {
                 b.classList.remove('active');
-                if(b.getAttribute('data-cat') === category || (categoria === 'Todos' && b.innerText.includes('Todos'))) {
+                if(b.getAttribute('data-cat') === categoria || (categoria === 'Todos' && b.innerText.includes('Todos'))) {
                     b.classList.add('active');
                 }
             });
