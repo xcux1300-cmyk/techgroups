@@ -18,7 +18,10 @@
         
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: '-apple-system', BlinkMacSystemFont, sans-serif; }
         body { background: var(--bg-principal); color: var(--texto-h); padding: 15px 0; overflow-x: hidden; }
-        .container { max-width: 500px; margin: 0 auto; padding: 0 15px; opacity: 0; animation: fadeInSite 0.5s 1.6s forwards; }
+        
+        /* Modificado para iniciar visível por padrão se já tiver visitado */
+        .container { max-width: 500px; margin: 0 auto; padding: 0 15px; opacity: 1; }
+        body.com-loading .container { opacity: 0; animation: fadeInSite 0.5s 1.6s forwards; }
 
         /* TELA DE CARREGAMENTO HACKER EM PORTUGUÊS */
         #loading-screen {
@@ -90,16 +93,16 @@
         }
         .cat-btn .count-badge { background: rgba(255,255,255,0.08); color: var(--texto-p); padding: 1px 6px; border-radius: 6px; font-size: 10px; margin-left: 4px; }
         
-        /* Categoria Ativa (Ver Todos Selecionado por Padrão) */
+        /* Categoria Ativa */
         .cat-btn.active { border-color: var(--verde-neon); background: rgba(0,255,135,0.06); color: var(--verde-neon); }
         .cat-btn.active .count-badge { background: var(--verde-neon); color: var(--bg-principal); font-weight: 800; }
         
-        /* Filtro Especial +18 na Linha Reta */
+        /* Filtro Especial +18 */
         .cat-btn[data-cat="+18"] { border-right: 2px solid var(--alerta-18); }
         .cat-btn[data-cat="+18"].active { border-color: var(--alerta-18); background: rgba(255,51,68,0.06); color: var(--alerta-18); }
         .cat-btn[data-cat="+18"].active .count-badge { background: var(--alerta-18); color: white; }
 
-        /* MARKETPLACE DE GRUPOS (VISUAL VITRINE) */
+        /* MARKETPLACE DE GRUPOS */
         .grid-grupos { display: flex; flex-direction: column; gap: 16px; }
         .card { background: var(--bg-card); border: 1px solid var(--borda); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
         
@@ -110,7 +113,6 @@
         .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 10px; }
         .card h3 { font-size: 18px; font-weight: 800; color: #fff; line-height: 1.2; }
         
-        /* SELO VIP COM RAIO (⚡) */
         .selo-verificado { color: var(--verde-neon); font-size: 11px; font-weight: 800; padding: 3px 6px; background: rgba(0,255,135,0.05); border: 1px solid var(--verde-neon); border-radius: 6px; text-shadow: 0 0 5px var(--verde-neon); display: inline-flex; align-items: center; gap: 2px; flex-shrink: 0; }
         .badge { background: rgba(255,255,255,0.05); color: var(--texto-p); font-size: 10px; padding: 3px 8px; border-radius: 5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
         
@@ -119,7 +121,6 @@
         .card-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.02); padding-top: 12px; }
         .btn-entrar { background: var(--azul-telegram); color: white; padding: 10px 24px; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; border: none; transition: background 0.2s; }
         
-        /* SISTEMA DE CURTIDA COM FOGO (🔥) */
         .like-zone { display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.02); padding: 8px 12px; border-radius: 8px; border: 1px solid var(--borda); }
         .btn-like { background: none; border: none; cursor: pointer; font-size: 14px; }
         .like-count { color: white; font-weight: 700; font-size: 12px; }
@@ -135,12 +136,12 @@
 </head>
 <body>
 
-    <div id="loading-screen">
+    <div id="loading-screen" style="display: none;">
         <div class="cyber-loader"></div>
         <div class="loading-text">ESTABELECENDO PROTOCOLO DE SEGURANÇA...</div>
     </div>
 
-    <div class="container">
+    <div class="container" id="main-container">
         <div class="header">
             <div class="stratton-logo">
                 <div class="circle-laurel">
@@ -177,6 +178,27 @@
         const SUPABASE_KEY = "sb_publishable_KUq3cj4qjnjXdv2FEDQ5Xw_z9to0B5P";
         let todosOsGrupos = [];
 
+        // SISTEMA DE MEMÓRIA DA SESSÃO (Evita repetição do loading)
+        const screen = document.getElementById('loading-screen');
+        if (!sessionStorage.getItem('primeiroAcessoConcluido')) {
+            document.body.classList.add('com-loading');
+            screen.style.display = 'flex';
+            
+            window.addEventListener('load', () => {
+                setTimeout(() => {
+                    screen.style.display = 'none';
+                    sessionStorage.setItem('primeiroAcessoConcluido', 'true');
+                }, 1500);
+            });
+
+            setTimeout(() => {
+                if(screen.style.display !== 'none') {
+                    screen.style.display = 'none';
+                    sessionStorage.setItem('primeiroAcessoConcluido', 'true');
+                }
+            }, 2000);
+        }
+
         const bannersCategoria = {
             "Programação": "https://images.unsplash.com/photo-1607799279861-4dd421887fb3?w=500&q=60",
             "Marketing": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500&q=60",
@@ -187,20 +209,6 @@
             "+18": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=500&q=60",
             "Padrão": "https://images.unsplash.com/photo-1614741118887-7a4ee193a5fa?w=500&q=60"
         };
-
-        // Força a remoção do loading após 1.5s de forma garantida
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                const screen = document.getElementById('loading-screen');
-                if(screen) screen.style.display = 'none';
-            }, 1500);
-        });
-
-        // Fallback extra de segurança caso o evento de load demore muito
-        setTimeout(() => {
-            const screen = document.getElementById('loading-screen');
-            if(screen && screen.style.display !== 'none') screen.style.display = 'none';
-        }, 2000);
 
         async function carregarGrupos() {
             try {
