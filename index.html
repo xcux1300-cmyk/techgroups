@@ -3,153 +3,159 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    
-    <!-- TAGS DE INFORMAÇÃO PARA O GOOGLE ENCONTRAR O SITE (SEO) -->
-    <title>TELEGROUPS - Diretório Premium de Grupos do Telegram</title>
-    <meta name="description" content="Encontre os melhores grupos e canais do Telegram sobre Programação, Marketing, Design e Negócios. Links verificados diariamente.">
-    <meta name="keywords" content="grupos telegram, canais telegram, links telegram, marketing, programacao, listas telegram">
-    <meta name="robots" content="index, follow">
-
+    <title>TELEGROUPS // Elite Directory</title>
     <style>
         :root {
-            --bg-principal: #070a13;
-            --bg-card: #0f1626;
+            --bg-principal: #04060a;
+            --bg-card: #0a0f1d;
             --verde-neon: #00ff87;
-            --verde-escuro: #00b35d;
-            --texto-p: #94a3b8;
+            --azul-telegram: #0088cc;
+            --texto-p: #798a9e;
             --texto-h: #ffffff;
-            --borda: #1e293b;
+            --borda: #141f36;
+            --alerta-18: #ff3344;
         }
         
-        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: '-apple-system', BlinkMacSystemFont, sans-serif; }
+        body { background: var(--bg-principal); color: var(--texto-h); padding: 15px; overflow-x: hidden; }
+        .container { max-width: 500px; margin: 0 auto; opacity: 0; animation: fadeInSite 1s 1.8s forwards; }
 
-        body { 
-            font-family: '-apple-system', BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
-            background: var(--bg-principal); 
-            color: var(--texto-h); 
-            padding: 15px;
-            padding-bottom: 40px;
+        /* TELA DE LOADING CIBERNÉTICA (O SUSTO DO USUÁRIO) */
+        #loading-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #04060a; z-index: 9999; display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+        }
+        .cyber-loader {
+            width: 60px; height: 60px; border: 3px solid transparent;
+            border-top-color: var(--verde-neon); border-radius: 50%;
+            animation: spin 0.8s linear infinite; margin-bottom: 20px;
+        }
+        .loading-text {
+            color: var(--verde-neon); font-size: 11px; font-weight: 800;
+            letter-spacing: 3px; font-family: monospace; text-transform: uppercase;
+            animation: pulse 1s infinite alternate;
         }
 
-        .container { max-width: 600px; margin: 0 auto; }
-
-        /* Header Totalmente Mobile First */
-        .header { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 20px 0; 
-            border-bottom: 1px solid var(--borda); 
-            margin-bottom: 20px; 
-        }
+        /* LOGO ESTILO STRATTON OAKMONT (MOLDURA EM VERDE NEON) */
+        .header { display: flex; flex-direction: column; align-items: center; padding: 25px 0; border-bottom: 1px solid var(--borda); margin-bottom: 15px; gap: 15px; }
+        .stratton-logo { display: flex; align-items: center; gap: 15px; }
         
-        .logo { 
-            font-size: 22px; 
-            font-weight: 900; 
-            color: var(--texto-h); 
-            letter-spacing: -0.5px; 
+        .circle-laurel {
+            width: 55px; height: 55px;
+            border: 3px dashed var(--verde-neon);
+            border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 0 15px rgba(0, 255, 135, 0.2);
+            animation: rotateSlow 20s linear infinite;
         }
-        .logo span { color: var(--verde-neon); }
+        .circle-inner { width: 35px; height: 35px; border: 1px solid var(--verde-neon); border-radius: 50%; }
+        
+        .logo-text { font-size: 26px; font-weight: 900; letter-spacing: 2px; text-align: center; }
+        .logo-text span { color: var(--verde-neon); }
 
         .btn-enviar { 
-            background: var(--verde-neon); 
-            color: var(--bg-principal);
-            padding: 8px 16px; 
-            text-decoration: none; 
-            border-radius: 6px; 
-            font-weight: 800; 
-            font-size: 13px;
-            text-transform: uppercase;
-            box-shadow: 0 0 12px rgba(0,255,135,0.3);
+            background: transparent; color: var(--verde-neon); border: 1px solid var(--verde-neon);
+            padding: 8px 20px; text-decoration: none; border-radius: 6px; font-weight: 800; 
+            font-size: 11px; text-transform: uppercase; letter-spacing: 1px; width: 100%; text-align: center;
+            box-shadow: inset 0 0 10px rgba(0,255,135,0.05);
         }
-        
-        /* Barra de Categorias Deslizante no Celular */
-        .categorias-nav { 
-            display: flex; 
-            gap: 8px; 
-            margin-bottom: 20px; 
-            overflow-x: auto; 
-            padding-bottom: 8px;
-            scrollbar-width: none; /* Esconde barra no Firefox */
-        }
-        .categorias-nav::-webkit-scrollbar { display: none; } /* Esconde barra no Chrome/Safari */
+
+        /* ESPAÇO PARA ANÚNCIOS (MONETIZAÇÃO) */
+        .banner-anuncio { background: linear-gradient(45deg, #101226, #0a0f1d); border: 1px dashed #1e293b; border-radius: 10px; padding: 12px; text-align: center; margin-bottom: 15px; color: var(--texto-p); font-size: 12px; font-weight: 600; }
+        .banner-anuncio span { color: var(--verde-neon); }
+
+        /* NAV DE CATEGORIAS CLICÁVEIS COM CONTADORES AUTOMÁTICOS */
+        .categorias-container { margin-bottom: 20px; }
+        .categorias-nav { display: flex; flex-direction: column; gap: 8px; }
         
         .cat-btn { 
-            background: var(--bg-card); 
-            border: 1px solid var(--borda); 
-            color: var(--texto-p); 
-            padding: 8px 16px; 
-            border-radius: 20px; 
-            cursor: pointer; 
-            font-weight: 600;
-            font-size: 13px;
-            white-space: nowrap; /* Impede o texto de quebrar linha */
+            background: var(--bg-card); border: 1px solid var(--borda); color: var(--texto-h); 
+            padding: 12px 16px; border-radius: 10px; cursor: pointer; font-size: 14px; 
+            font-weight: 700; display: flex; justify-content: space-between; align-items: center;
+            transition: all 0.2s ease;
         }
-        .cat-btn.active { background: var(--verde-neon); color: var(--bg-principal); border-color: var(--verde-neon); font-weight: 700; }
+        .cat-btn .count-badge { background: rgba(255,255,255,0.05); color: var(--texto-p); padding: 2px 8px; border-radius: 6px; font-size: 11px; }
+        
+        .cat-btn.active { border-color: var(--verde-neon); background: rgba(0,255,135,0.03); }
+        .cat-btn.active .count-badge { background: var(--verde-neon); color: var(--bg-principal); font-weight: 800; }
+        
+        /* Categoria +18 com Alerta Visual */
+        .cat-btn[data-cat="+18"] { border-left: 3px solid var(--alerta-18); }
+        .cat-btn[data-cat="+18"].active { border-color: var(--alerta-18); background: rgba(255,51,68,0.03); }
+        .cat-btn[data-cat="+18"].active .count-badge { background: var(--alerta-18); color: white; }
 
-        /* Lista de Cards Estilo Aplicativo */
-        .grid-grupos { display: flex; flex-direction: column; gap: 12px; }
+        /* GRID DE CARDS */
+        .grid-grupos { display: flex; flex-direction: column; gap: 14px; }
+        .card { background: var(--bg-card); border: 1px solid var(--borda); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; }
         
-        .card { 
-            background: var(--bg-card); 
-            border: 1px solid var(--borda); 
-            padding: 16px; 
-            border-radius: 12px; 
-        }
-        
+        .card-banner { height: 90px; background-size: cover; background-position: center; position: relative; filter: brightness(0.7); }
+        .card-banner::after { content: ''; position: absolute; width: 100%; height: 100%; background: linear-gradient(to bottom, transparent, var(--bg-card)); }
+
+        .card-corpo { padding: 15px; position: relative; margin-top: -15px; z-index: 2; }
         .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
-        .card h3 { font-size: 18px; font-weight: 700; color: var(--texto-h); max-width: 75%; }
+        .card h3 { font-size: 17px; font-weight: 800; color: white; display: flex; align-items: center; gap: 5px; }
         
-        .badge { 
-            background: rgba(0, 255, 135, 0.1);
-            color: var(--verde-neon); 
-            font-size: 11px; 
-            padding: 4px 8px; 
-            border-radius: 6px; 
-            font-weight: 700;
-            text-transform: uppercase;
-        }
+        /* SELO VERIFICADO COM RAIO (⚡) */
+        .selo-verificado { color: var(--verde-neon); font-size: 11px; font-weight: 800; padding: 4px 8px; background: rgba(0,255,135,0.05); border: 1px solid var(--verde-neon); border-radius: 6px; text-shadow: 0 0 5px var(--verde-neon); display: flex; align-items: center; gap: 3px; }
+        .badge { background: rgba(255,255,255,0.05); color: var(--texto-p); font-size: 10px; padding: 3px 8px; border-radius: 5px; font-weight: 700; text-transform: uppercase; }
+        .card p { color: var(--texto-p); font-size: 13px; line-height: 1.4; margin-bottom: 15px; }
         
-        .card p { color: var(--texto-p); font-size: 13px; line-height: 1.4; margin-bottom: 16px; }
-        
-        /* Rodapé do Card Otimizado para Dedão */
         .card-footer { display: flex; justify-content: space-between; align-items: center; }
+        .btn-entrar { background: var(--azul-telegram); color: white; padding: 10px 22px; text-decoration: none; border-radius: 6px; font-weight: 700; font-size: 12px; letter-spacing: 0.5px; cursor: pointer; border: none; }
         
-        .btn-entrar { 
-            background: #0088cc; /* Azul clássico do Telegram */
-            color: white; 
-            padding: 10px 24px; 
-            text-decoration: none; 
-            border-radius: 8px; 
-            font-weight: 700; 
-            font-size: 13px;
-            letter-spacing: 0.5px;
-        }
-        
-        .like-zone { display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.04); padding: 8px 12px; border-radius: 8px; }
-        .btn-like { background: none; border: none; cursor: pointer; font-size: 16px; }
-        .like-count { color: var(--texto-h); font-weight: 700; font-size: 13px; }
+        /* SISTEMA DE CURTIDA COM FOGO (🔥) */
+        .like-zone { display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.02); padding: 8px 12px; border-radius: 6px; border: 1px solid var(--borda); }
+        .btn-like { background: none; border: none; cursor: pointer; font-size: 14px; }
+        .like-count { color: white; font-weight: 700; font-size: 12px; }
 
-        .loading { text-align: center; color: var(--texto-p); padding: 40px; font-size: 15px; font-weight: 600; }
+        .loading { text-align: center; color: var(--texto-p); padding: 30px; font-size: 13px; font-weight: 600; }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes rotateSlow { to { transform: rotate(360deg); } }
+        @keyframes pulse { from { opacity: 0.4; } to { opacity: 1; } }
+        @keyframes fadeInSite { to { opacity: 1; } }
     </style>
 </head>
 <body>
 
+    <!-- LOADING SCREEN -->
+    <div id="loading-screen">
+        <div class="cyber-loader"></div>
+        <div class="loading-text">ESTABLISHING SECURE PROTOCOL...</div>
+    </div>
+
     <div class="container">
         <div class="header">
-            <div class="logo">TELEGROUPS<span>//</span></div>
-            <a href="enviar.html" class="btn-enviar">+ Adicionar</a>
+            <div class="stratton-logo">
+                <div class="circle-laurel">
+                    <div class="circle-inner"></div>
+                </div>
+                <div class="logo-text">TELEGROUPS<span>//</span></div>
+            </div>
+            <a href="enviar.html" class="btn-enviar">+ SOLICITAR LISTAGEM</a>
         </div>
 
-        <div class="categorias-nav">
-            <button class="cat-btn active" onclick="filtrar('Todos')">Todos</button>
-            <button class="cat-btn" onclick="filtrar('Programação')">Programação</button>
-            <button class="cat-btn" onclick="filtrar('Marketing')">Marketing</button>
-            <button class="cat-btn" onclick="filtrar('Design')">Design</button>
-            <button class="cat-btn" onclick="filtrar('Negócios')">Negócios</button>
+        <!-- ESPAÇO MONETIZAÇÃO -->
+        <div class="banner-anuncio">
+            SISTEMA DE TRÁFEGO PRIVADO. ANUNCIE: <span>t.me/seu_suporte</span>
+        </div>
+        
+        <!-- CATEGORIAS CLICÁVEIS E CONTADORES -->
+        <div class="categorias-container">
+            <div class="categorias-nav">
+                <button class="cat-btn active" onclick="filtrar('Todos')">⚡ VER TODOS OS CANAIS <span class="count-badge" id="count-Todos">0</span></button>
+                <button class="cat-btn" data-cat="Programação" onclick="filtrar('Programação')">🖥️ PROGRAMAÇÃO <span class="count-badge" id="count-Programação">0</span></button>
+                <button class="cat-btn" data-cat="Marketing" onclick="filtrar('Marketing')">📈 MARKETING DIGITAL <span class="count-badge" id="count-Marketing">0</span></button>
+                <button class="cat-btn" data-cat="Design" onclick="filtrar('Design')">🎨 DESIGN & MULTIMÍDIA <span class="count-badge" id="count-Design">0</span></button>
+                <button class="cat-btn" data-cat="Negócios" onclick="filtrar('Negócios')">💼 NEGÓCIOS & INFROPRODUTOS <span class="count-badge" id="count-Negócios">0</span></button>
+                <button class="cat-btn" data-cat="Amizades" onclick="filtrar('Amizades')">💬 AMIZADES & CHAT ONLINE <span class="count-badge" id="count-Amizades">0</span></button>
+                <button class="cat-btn" data-cat="Apostas" onclick="filtrar('Apostas')">🎲 APOSTAS & INVESTIMENTOS <span class="count-badge" id="count-Apostas">0</span></button>
+                <button class="cat-btn" data-cat="+18" onclick="filtrar('+18')">🔞 CONTEÚDO ADULTO (+18) <span class="count-badge" id="count-+18">0</span></button>
+            </div>
         </div>
 
-        <div id="status" class="loading">Buscando servidores seguros...</div>
+        <div id="status" class="loading">Descriptografando dados...</div>
         <div id="grupos-container" class="grid-grupos"></div>
     </div>
 
@@ -157,6 +163,22 @@
         const SUPABASE_URL = "https://fufgsmmejwvibqkglkbv.supabase.co";
         const SUPABASE_KEY = "sb_publishable_KUq3cj4qjnjXdv2FEDQ5Xw_z9to0B5P";
         let todosOsGrupos = [];
+
+        const bannersCategoria = {
+            "Programação": "https://images.unsplash.com/photo-1607799279861-4dd421887fb3?w=500&q=60",
+            "Marketing": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500&q=60",
+            "Design": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=500&q=60",
+            "Negócios": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=500&q=60",
+            "Amizades": "https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=500&q=60",
+            "Apostas": "https://images.unsplash.com/photo-1596838132731-3301c3fd4317?w=500&q=60",
+            "+18": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=500&q=60",
+            "Padrão": "https://images.unsplash.com/photo-1614741118887-7a4ee193a5fa?w=500&q=60"
+        };
+
+        setTimeout(() => {
+            const screen = document.getElementById('loading-screen');
+            if(screen) screen.style.display = 'none';
+        }, 1500);
 
         async function carregarGrupos() {
             try {
@@ -166,10 +188,21 @@
                     headers: { "apikey": SUPABASE_KEY, "Authorization": "Bearer " + SUPABASE_KEY }
                 });
                 todosOsGrupos = await response.json();
+                
+                calcularContadores();
                 renderizar(todosOsGrupos);
             } catch (error) {
-                document.getElementById('status').innerText = "Erro ao conectar com a rede.";
+                document.getElementById('status').innerText = "Falha de sincronização.";
             }
+        }
+
+        function calcularContadores() {
+            document.getElementById('count-Todos').innerText = todosOsGrupos.length;
+            const cats = ['Programação', 'Marketing', 'Design', 'Negócios', 'Amizades', 'Apostas', '+18'];
+            cats.forEach(c => {
+                const qtd = todosOsGrupos.filter(g => g.categoria === c).length;
+                document.getElementById('count-' + c).innerText = qtd;
+            });
         }
 
         function renderizar(lista) {
@@ -178,27 +211,37 @@
             container.innerHTML = '';
             
             if (lista.length === 0) {
-                statusNode.innerText = "Nenhum canal verificado nesta categoria.";
+                statusNode.innerText = "Nenhum canal ativo nesta frequência.";
                 statusNode.style.display = 'block';
                 return;
             }
             statusNode.style.display = 'none';
 
             lista.forEach(grupo => {
+                const urlBanner = bannersCategoria[grupo.categoria] || bannersCategoria["Padrão"];
+                
+                // SELO VERIFICADO COM RAIO (⚡) ATIVADO VIA TAG [VIP]
+                const eVerificado = grupo.descricao && grupo.descricao.includes("[VIP]") ? '<span class="selo-verificado">⚡ SYSTEM LOCK</span>' : '';
+                const descricaoLimpa = grupo.descricao ? grupo.descricao.replace("[VIP]", "") : 'Link encriptado e ativo para transferência.';
+
                 const card = document.createElement('div');
                 card.className = 'card';
-                card.innerHTML = `
-                    <div class="card-header">
-                        <h3>${grupo.nome}</h3>
-                        <span class="badge">${grupo.categoria}</span>
-                    </div>
-                    <p>${grupo.descricao || 'Grupo premium verificado pelos administradores.'}</p>
-                    <div class="card-footer">
-                        <div class="like-zone">
-                            <button class="btn-like" onclick="darLike(${grupo.id}, ${grupo.likes || 0})">🔥</button>
-                            <span class="like-count" id="like-count-${grupo.id}">${grupo.likes || 0}</span>
+                card.innerHTML = 
+                    <div class="card-banner" style="background-image: url('${urlBanner}')"></div>
+                    <div class="card-corpo">
+                        <div class="card-header">
+                            <h3>${grupo.nome}</h3>
+                            <span class="badge">${grupo.categoria}</span>
                         </div>
-                        <a href="${grupo.link}" target="_blank" class="btn-entrar">ENTRAR</a>
+                        <p>${descricaoLimpa}</p>
+                        <div class="card-footer">
+                            <div class="like-zone">
+                                <button class="btn-like" onclick="darLike(${grupo.id}, ${grupo.likes || 0})">🔥</button>
+                                <span class="like-count" id="like-count-${grupo.id}">${grupo.likes || 0}</span>
+                            </div>
+                            ${eVerificado}
+                            <button class="btn-entrar" onclick="registrarClique(${grupo.id}, '${grupo.link}', ${grupo.cliques || 0})">CONNECT</button>
+                        </div>
                     </div>
                 ;
                 container.appendChild(card);
@@ -207,7 +250,7 @@
 
         function filtrar(categoria) {
             document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
+            if(event.currentTarget) event.currentTarget.classList.add('active');
             if (categoria === 'Todos') {
                 renderizar(todosOsGrupos);
             } else {
@@ -218,7 +261,7 @@
 
         async function darLike(id, likesAtuais) {
             const novoLike = likesAtuais + 1;
-            document.getElementById(like-count-${id}`).innerText = novoLike;
+            document.getElementById(like-count-${id}).innerText = novoLike;
             
             await fetch(SUPABASE_URL + "/rest/v1/lista_grupos?id=eq." + id, {
                 method: 'PATCH',
@@ -228,6 +271,22 @@
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({ likes: novoLike })
+            });
+        }
+
+        // NOVO CONTADOR DE CLIQUES AUTOMÁTICO
+        async function registrarClique(id, linkOriginal, cliquesAtuais) {
+            const novosCliques = cliquesAtuais + 1;
+            window.open(linkOriginal, '_blank');
+
+            await fetch(SUPABASE_URL + "/rest/v1/lista_grupos?id=eq." + id, {
+                method: 'PATCH',
+                headers: {
+                    "apikey": SUPABASE_KEY,
+                    "Authorization": "Bearer " + SUPABASE_KEY,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ cliques: novosCliques })
             });
         }
 
