@@ -103,7 +103,7 @@
             const link = document.getElementById('link').value.trim();
             const descricao = document.getElementById('descricao').value.trim();
 
-            // Proteção 1: Validação básica contra Link Falso
+            // Bloqueia links que não sejam do Telegram
             if(!link.includes('t.me') && !link.includes('telegram.me')) {
                 statusMsg.className = "msg-status msg-erro";
                 statusMsg.innerText = "Por favor, insira um link válido do Telegram (t.me/...).";
@@ -111,7 +111,7 @@
                 return;
             }
 
-            // Proteção 2: Desativar botão para evitar cliques múltiplos (Spam)
+            // Desativa botão contra Cliques Múltiplos (Anti-Spam)
             btnSubmit.disabled = true;
             btnSubmit.innerText = "ENVIANDO PROTOCOLO...";
             statusMsg.style.display = "none";
@@ -130,7 +130,7 @@
                         categoria: categoria,
                         link: link,
                         descricao: descricao,
-                        aprovado: false, // Entra como falso para você moderar no banco
+                        aprovado: false, // Entra desativado para você moderar no painel
                         likes: 0,
                         cliques: 0
                     })
