@@ -36,7 +36,6 @@
             animation: pulse 1s infinite alternate;
             text-align: center; padding: 0 20px;
         }
-        .loading-text span { color: var(--verde-neon); }
 
         /* LOGO ROTACIONANDO */
         .header { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid var(--borda); margin-bottom: 25px; }
@@ -111,12 +110,14 @@
 </head>
 <body>
 
+    <!-- TELA DE ANTE-SALA COM GATILHO DE SEGURANÇA -->
     <div id="loading-screen">
         <div class="cyber-loader"></div>
-        <div class="loading-text">🔒 CONEXÃO SEGURA. Você está <span>protegido</span> neste site.</div>
+        <div class="loading-text">CONEXÃO SEGURA. Você está protegido neste site.</div>
     </div>
 
     <div class="container">
+        <!-- HEADER COM LOGO DA STRATTON ATIVA -->
         <div class="header">
             <div class="stratton-logo">
                 <div class="circle-laurel">
@@ -127,6 +128,7 @@
             <a href="index.html" class="btn-voltar">VOLTAR</a>
         </div>
 
+        <!-- FORMULÁRIO DE CADASTRO PRIVADO -->
         <div class="box-formulario">
             <h2>Impulsione seu Grupo</h2>
             <p>Preencha os dados abaixo de forma segura para listar seu link diretamente na nossa vitrine pública.</p>
